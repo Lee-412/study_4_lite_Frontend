@@ -1,134 +1,14 @@
-'use client'
-import React, { useState } from 'react';
-import {
-    Dialog,
-    DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, Grid, Typography, Avatar, Stack, Box, Container,
-    InputAdornment,
-    IconButton,
-    FormControlLabel,
-    Checkbox
-} from '@mui/material';
-import LockIcon from '@mui/icons-material/Lock';
-import PersonIcon from '@mui/icons-material/Person';
-import { Route, Visibility, VisibilityOff } from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
+import SinginBox from "@/component/signin/signin.box";
 
-const genders = [
-    { value: 'male', label: 'Male' },
-    { value: 'female', label: 'Female' },
-    { value: 'other', label: 'Other' },
-];
 
-const SinginBox = () => {
 
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-    });
-    const route = useRouter();
+const SinginPage = async () => {
 
-    const [showPassword, setShowPassword] = useState(false);
-
-    const handleShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleChange = (e: any) => {
-        const { name, value } = e.target;
-        console.log(name, value);
-
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
-
-    const handleCancel = () => {
-
-    }
-    const handleSubmit = async (e: any) => {
-        route.push('/course');
-        console.log(formData);
-    };
 
     return (
-        <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{
-                p: 1, backgroundColor: '#002855', display: 'flex', alignItems: 'center', borderRadius: 2,
-                justifyContent: "space-around"
-            }}
-        >
-            <TextField
-                required
-                name="email"
-                placeholder="email"
-                value={formData.email}
-                onChange={handleChange}
-                variant="outlined"
-                autoComplete="cuurent-email"
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <PersonIcon />
-                        </InputAdornment>
-                    ),
-                    style: { backgroundColor: 'white', borderRadius: '5px' }
-                }}
-                sx={{ mr: 1 }}
-            />
-            <TextField
-                required
-                name="password"
-                placeholder="Password"
-                type={showPassword ? 'text' : 'password'}
-                value={formData.password}
-                onChange={handleChange}
-                variant="outlined"
-                autoComplete="current-password"
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <LockIcon />
-                        </InputAdornment>
-                    ),
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton onClick={handleShowPassword}>
-                                {showPassword ? <VisibilityOff sx={{ color: 'black' }} /> : <Visibility sx={{ color: 'black' }} />}
-                            </IconButton>
-                        </InputAdornment>
-                    ),
-                    style: { backgroundColor: 'white', borderRadius: '5px' }
-                }}
-                sx={{ mr: 1 }}
-            />
-            <Grid item>
-                <FormControlLabel
-                    control={<Checkbox sx={{ color: 'white' }} />}
-                    label={<span style={{ color: 'white' }}>Ghi nhớ</span>}
-                />
-            </Grid>
-            <Grid item>
-                <Button variant="text" sx={{ color: 'white', textTransform: 'none' }}>
-                    Quên mật khẩu
-                </Button>
-            </Grid>
-            <Button type="submit"
-                onClick={handleSubmit}
-                variant="contained"
-                color="primary"
-                sx={{ backgroundColor: 'white', color: '#002855', fontWeight: 'bold', textTransform: 'none' }}>
-                Đăng nhập
-            </Button>
-        </Box>
-    );
-
-
+        <SinginBox />
+    )
 
 };
 
-export default SinginBox;
+export default SinginPage;

@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useTheme } from '@mui/material/styles';
+import { useSession } from 'next-auth/react';
 
 const courses = [
     {
@@ -102,6 +103,10 @@ const TestPage = () => {
     const [showFilter, setShowFilter] = useState(false);
     const [levelFilter, setLevelFilter] = useState('');
 
+
+    const { data: session } = useSession();
+
+
     useEffect(() => {
         const filterCourses = courses.filter(
             (course) =>
@@ -124,7 +129,8 @@ const TestPage = () => {
             <Typography variant="h4" align="center" gutterBottom>
                 Welcome to our Online Learning Platform
             </Typography>
-
+            <Typography variant="h4" align="center" gutterBottom>
+            </Typography>
             <Grid container justifyContent="center" alignItems="center" sx={{ marginBottom: '20px' }}>
                 <Grid item>
                     <TextField

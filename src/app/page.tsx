@@ -2,11 +2,10 @@
 import FooterApp from "@/component/footer/footer";
 import HeaderApp from "@/component/header/header";
 import { Box, Container, } from "@mui/material";
-import { useSession } from "next-auth/react";
-import SinginBox from "./signin/page";
-import { useState } from "react";
+
 import TitleBox from "@/component/title/title.box";
 import ImageSlider from "@/component/slider/slide";
+import SinginPage from "./signin/page";
 const slider = [
     {
         id: 1,
@@ -64,7 +63,7 @@ export default async function HomePage() {
             <Container sx={{
             }}>
                 <TitleBox />
-                <SinginBox />
+                <SinginPage />
                 <ImageSlider sliderData={slider} />
             </Container>
             <FooterApp />
