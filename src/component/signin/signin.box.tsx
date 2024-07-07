@@ -64,7 +64,13 @@ const SinginBox = () => {
 
             if (response.ok) {
                 console.log('Login successful:', data);
-                route.push('/course');
+                if (data.user.authen == 'Admin') {
+                    route.push('/dashboard');
+                }
+                else {
+                    route.push('/course');
+                }
+
             } else {
                 console.error('Login failed:', data);
                 alert('Login failed. Please check your email and password.');

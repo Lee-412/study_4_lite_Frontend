@@ -15,21 +15,25 @@ import { redirect, useRouter } from 'next/navigation';
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useState } from 'react';
 import { Button } from '@mui/material';
+import UserManual from '../modal/user.manual.modal';
 
 
 export default function AppHeader() {
 
     const { data: session } = useSession();
-    const [language, setLanguage] = useState("Vietnamese")
+    const [language, setLanguage] = useState("Vietnamese");
 
     const router = useRouter();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         useState<null | HTMLElement>(null);
 
-    const [checkSignout, setCheckSignout] = useState(false)
+    const [checkSignout, setCheckSignout] = useState(false);
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    const [openManual, setOpenManual] = useState(false);
+
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -207,7 +211,9 @@ export default function AppHeader() {
                                         <Button>
                                             {language}
                                         </Button>
-                                        <Button>
+                                        <Button onClick={() => {
+                                            setOpenManual(true);
+                                        }}>
                                             Hướng dẫn sử dụng
                                         </Button>
 
@@ -232,6 +238,8 @@ export default function AppHeader() {
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
+            <UserManual openManual={openManual}
+                setOpenManual={setOpenManual} />
         </Box >
     );
 

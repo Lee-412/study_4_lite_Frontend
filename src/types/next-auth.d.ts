@@ -3,6 +3,7 @@ import NextAuth from "next-auth"
 import { JWT } from "next-auth/jwt"
 
 interface IUser {
+    name: any;
     _id: string;
     username: string;
     email: string;

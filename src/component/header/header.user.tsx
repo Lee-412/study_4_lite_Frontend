@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { Button } from '@mui/material';
 
 
-export default function AppHeaderLogin() {
+export default function HeaderAppUser() {
 
     const { data: session } = useSession();
 
