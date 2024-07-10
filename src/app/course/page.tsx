@@ -1,6 +1,6 @@
 import TestContainer from "@/app/course/TestContainer";
 
-const Test_api_url = `${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`
+const Test_api_url = `${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL_DEPLOYED}/tests`
 
 const TestPage = async() => {
     const response = await fetch(Test_api_url)
