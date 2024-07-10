@@ -1,10 +1,15 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import '@/component/InputWitingArea/WritingArea.css'
+import { counting_words } from '@/utils/utilsFunction'
 function WritingArea() {
-    let wordCount = 0;
+    const [wordCount, setWordCount] = useState(0)
   return (
     <div className="writing-container">
-        <textarea rows={20} cols={64} name="usrtxt" wrap="hard" className="writing-field" placeholder='Viết essay tại đây...'>
+        <textarea onChange={(e)=>{setWordCount(counting_words(e.target.value))
+          console.log(e.target.value);
+          
+        }} rows={20} cols={64} name="usrtxt" wrap="hard" className="writing-field" placeholder='Viết essay tại đây...'>
         </textarea>
         <div className="word-count">
             <label htmlFor="">Wordcount: {wordCount}</label>

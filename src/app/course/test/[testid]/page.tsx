@@ -1,38 +1,31 @@
 import WritingArea from '@/component/InputWitingArea/WritingArea'
 import ScrollableTextArea from '@/component/ScrollableTextArea/ScrollableTextArea'
 import TimerCustom from '@/component/Timer/TimerCustom'
+import WritingLayout from '@/component/WritingTestLayout/WritingLayout'
 import { Button } from '@mui/material'
-import React from 'react'
+import React, { useRef } from 'react'
 
-function page({params}:any) {
+async function page({params}:any) {
 
-  console.log(params);
+  //console.log(params);
   if(params.testid.includes('Wrting')){
+    const params_extraction = params.testid.split('-')
+    //console.log(params_extraction);
+    
+    const test_id = params_extraction[params_extraction.length - 1]
+    //console.log(writing_id);
+    
+    const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests/${test_id}?populate=*`)
+    const data = await response.json()
+    const writing_id = data.data.attributes.wrting.data.id
+    const response_w = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${writing_id}?populate=*`)
+    const data_w = await response_w.json()
+    //console.log(data_w.data.attributes)
+    const writing_data = data_w.data.attributes
+    const test_data = data.data    
+    
     return (
-      <div className="content">
-          <h1>Đề thi ABCXYZ</h1>
-          <TimerCustom />
-          <div className="main-content task1">
-              <ScrollableTextArea />
-              <WritingArea />
-          </div>
-          <div className="main-content task2 hidden">
-              <ScrollableTextArea />
-              <WritingArea />
-          </div>
-          <div className="button-component" style={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
-              <Button variant="contained" style={{marginTop: '2%', marginRight: '30%'}}>Nộp bài</Button>
-              <Button sx={{
-                marginTop: '2%',
-                marginRight: '4%',
-              }}>Task 1</Button>
-              <Button sx={{
-                marginTop: '2%',
-                marginRight: '4%'
-              }}>Task 2</Button>
-          </div>
-          
-      </div>
+      <WritingLayout writing={writing_data} test={test_data}/>
     )
   }
   return (

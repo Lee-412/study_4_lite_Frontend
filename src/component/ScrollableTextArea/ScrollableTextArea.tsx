@@ -1,14 +1,24 @@
 import React from 'react'
 import '@/component/ScrollableTextArea/ScrollableText.css'
-function ScrollableTextArea() {
-    const task  = 'The table below shows population figures for 4 countries for 2003 and projected figures for 2025 and 2050.\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.'
+function ScrollableTextArea({data}:any) {
+  //console.log(data);
+  const task = data.task
+  //console.log(data);
+  
+  let img = data.img
+  if(img.data === null) {
+  } else {
+    
+    img = img.data[0].attributes.formats.medium.url
+    const link_image = `${process.env.NEXT_PUBLIC_STRAPI_LINK_URL}${img}`
+    
+  }
   return (
     <div className="text-container">
-        <textarea rows={15} cols={64} name="usrtxt" wrap="hard" className="text-field" disabled={true}>
-            {task}
+        <textarea rows={15} cols={64} name="usrtxt" wrap="hard" className="text-field" disabled={true} value={task}>
         </textarea>
         <div className="image">
-            <img src="http://localhost:1337/uploads/medium_image12_1d7e7071f0.png" alt=""/>
+            <img src={`${process.env.NEXT_PUBLIC_STRAPI_LINK_URL}${img}`} alt=""/>
         </div>
     </div>
   )
