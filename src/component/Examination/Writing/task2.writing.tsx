@@ -37,7 +37,6 @@ const WritingTask2 = (props: any) => {
                         onChange={(e) => setFormData({ ...formData, task2: e.target.value })}
                         multiline
                         rows={6}
-
                         variant="outlined"
                         fullWidth
                         sx={{ mb: 2 }}

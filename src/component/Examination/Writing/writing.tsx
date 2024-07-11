@@ -16,7 +16,7 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import WritingTabEdit from './writing.edit';
 
 export type FormDataType = {
-    name: '';
+    name: string;
     task1: string;
     img1: ImageType | null;
     img2: ImageType | null;
@@ -128,7 +128,7 @@ const WritingTab = () => {
     })
 
     const [tasks, setTasks] = React.useState<TaskType[]>([]);
-    const [taskId, setTaskId] = React.useState<number>(0);
+    // const [taskId, setTaskId] = React.useState<number>(0);
     const [editingTask, setEditingTask] = React.useState<TaskType | null>(null);
 
 
