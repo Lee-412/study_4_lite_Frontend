@@ -20,8 +20,8 @@ function Copyright() {
     return (
         <Typography variant="body2" color="text.secondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
+            <Link color="inherit" href="#">
+                nothing to say
             </Link>{' '}
             {new Date().getFullYear()}.
         </Typography>
@@ -174,6 +174,7 @@ theme = {
 const drawerWidth = 256;
 
 export default function Paperbase() {
+
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [activeComponent, setActiveComponent] = React.useState('Quản lý học viên');
     const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));

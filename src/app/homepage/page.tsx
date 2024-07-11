@@ -9,7 +9,7 @@ const ExamPage = () => {
             <HeaderApp />
             <Container>
 
-                Bài kiểm tra
+                homepage
 
             </Container>
             <FooterApp />
