@@ -10,7 +10,7 @@ function ScrollableTextArea({data}:any) {
   } else {
     
     img = img.data[0].attributes.formats.medium.url
-    const link_image = `${process.env.NEXT_PUBLIC_STRAPI_LINK_URL_DEPLOYED}${img}`
+    const link_image = `${process.env.NEXT_PUBLIC_STRAPI_LINK_URL}${img}`
     
   }
   return (
@@ -18,7 +18,7 @@ function ScrollableTextArea({data}:any) {
         <textarea rows={15} cols={64} name="usrtxt" wrap="hard" className="text-field" disabled={true} value={task}>
         </textarea>
         <div className="image">
-            <img src={`${process.env.NEXT_PUBLIC_STRAPI_LINK_URL_DEPLOYED}${img}`} alt=""/>
+            <img src={`${process.env.NEXT_PUBLIC_STRAPI_LINK_URL}${img}`} alt=""/>
         </div>
     </div>
   )
