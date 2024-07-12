@@ -1,0 +1,15 @@
+.timer-container{
+    display: flex;
+}
+.divider {
+    font-size: large;
+    font-weight: bold;
+}
+.time {
+    display: flex;
+    font-size: large;
+    font-weight: bold;
+}
+.label-time{
+    transform: translateY(10%);
+}

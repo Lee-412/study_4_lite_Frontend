@@ -1,8 +1,7 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-    Dialog,
-    DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, Grid, Typography, Avatar, Stack, Box, Container,
+    TextField, Button, Grid, Box,
     InputAdornment,
     IconButton,
     FormControlLabel,
@@ -10,9 +9,8 @@ import {
 } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
-import { Route, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 
 
 const SinginBox = () => {
@@ -45,6 +43,7 @@ const SinginBox = () => {
     const handleCancel = () => {
 
     }
+
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
@@ -63,14 +62,29 @@ const SinginBox = () => {
             console.log(data);
 
             if (response.ok) {
-                console.log('Login successful:', data);
-                if (data.user.authen == 'Admin') {
+                console.log(data.user.id);
+
+
+                // sessionStorage.setItem('userData', JSON.stringify({
+                //     token: data.jwt,
+                //     user: data.user,
+                // }));
+
+                const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/users/${data.user.id}?populate=*`)
+                const dataUser = await res.json();
+                console.log(dataUser);
+
+                sessionStorage.setItem('userData', JSON.stringify({
+                    token: data.jwt,
+                    user: dataUser,
+                }));
+
+                // Redirect based on user role
+                if (data.user.authen === 'Admin') {
                     route.push('/dashboard');
-                }
-                else {
+                } else {
                     route.push('/course');
                 }
-
             } else {
                 console.error('Login failed:', data);
                 alert('Login failed. Please check your email and password.');
@@ -79,8 +93,6 @@ const SinginBox = () => {
             console.error('Error during login:', error);
         }
     };
-
-
 
     return (
         <Box

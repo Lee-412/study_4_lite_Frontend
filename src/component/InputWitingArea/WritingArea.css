@@ -1,0 +1,23 @@
+.writing-container{
+    width: 50%;
+    height: 95%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    /* border: 1px solid black; */
+}
+.writing-field {
+    width: 95%;
+    height: 70%;
+    font-size: 1em;
+    color: black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 10px;
+    background-color: 'black';
+    margin-top: 5%;
+    /* border: 0px; */
+}
+.word-count {
+    align-self: flex-end;
+    margin-right: 5%;
+}
