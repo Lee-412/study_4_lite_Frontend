@@ -7,14 +7,17 @@ import { get_minute_from_seconds } from '@/utils/utilsFunction'
 import { Button } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { updateRelation } from '@/utils/updateRelationRequest'
+import ModalCustom from '@/component/modal/ModalCustom'
 
 function WritingLayout({writing, test, writingID}:any) {
+    const [openModalSm, setOpenModalSm] = useState(false)
+    const [openModalEt, setOpenModalEt] = useState(false)
     const [isDisplay1, setDisPlay1] = useState(true)
     const [isDisplay2, setDisPlay2] = useState(false)
     const initDuration = test.attributes.Duration
     const check_dur = '30'
-    const init_minute = get_minute_from_seconds(initDuration)
-    const init_sec = init_minute === 0 ? parseInt(initDuration) : parseInt(initDuration) % init_minute
+    const init_minute = get_minute_from_seconds(check_dur)
+    const init_sec = init_minute === 0 ? parseInt(check_dur) : parseInt(check_dur) % init_minute
     const [minute, setMinute] = useState(init_minute)
     const [sec, setSec] = useState(init_sec)
     const [isRunning, setRunning] = useState(true)
@@ -37,35 +40,32 @@ function WritingLayout({writing, test, writingID}:any) {
               setSec(59)
           } else if(sec <= 0 && minute <= 0){
               setRunning(false)
-              alert('end timer')
-              const request_link = `${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/answer-wrtings`
-              const writing_link = `${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${writingID}?populate=*`
-            //console.log(writingID);
-        
-              postRequest(gathering_data(writing1, writing2, wordCnt1, wordCnt2), request_link).then((item)=>{
-              //console.log(item.data.id)
-              updateRelation(item.data.id, writing_link, 'answer_wrtings')
-        })
-            return ()=> clearInterval(interval) 
+              alert('Hết thời gian làm bài')
+              setSubmit(true)
+              setOpenModalEt(true)
           } 
         }, 1000) 
-      } else if(isSubmit) {
+      }else if(openModalSm) {
+        setOpenModalSm(true)
+      }
+      else if(isSubmit && !openModalSm){
+      } 
+      if(isSubmit) {
         alert('submitted')
         //console.log(gathering_data(writing1, writing2, wordCnt1, wordCnt2));
         const request_link = `${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/answer-wrtings`
         const writing_link = `${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${writingID}?populate=*`
         //console.log(writingID);
-        
+
         postRequest(gathering_data(writing1, writing2, wordCnt1, wordCnt2), request_link).then((item)=>{
               //console.log(item.data.id)
               updateRelation(item.data.id, writing_link, 'answer_wrtings')
         })
         
-        
         return ()=> clearInterval(interval)
       }
       return () => clearInterval(interval)
-    },[minute, sec, isRunning, isSubmit])
+    },[minute, sec, isRunning, isSubmit, openModalSm])
 
     const test_name = test.attributes.name
     const task1_data = {
@@ -88,9 +88,8 @@ function WritingLayout({writing, test, writingID}:any) {
       }
       return data_writing
     }
-
-    const handdleSubmit = () => {
-      setSubmit(true)
+    const handdleOpenModal = () => {
+      setOpenModalSm(true)
     }
    
     const handdleClick1 = () => {
@@ -110,7 +109,7 @@ function WritingLayout({writing, test, writingID}:any) {
           <h1>{test_name}</h1>
           <TimerCustom minutes={minute} seconds={sec}/>
           <div className="button-component" style={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
-              <Button onClick={handdleSubmit} variant="contained" style={{marginTop: '2%', marginRight: '24%', marginBottom: '4%'}}>Nộp bài</Button>
+              <Button onClick={handdleOpenModal} variant="contained" style={{marginTop: '2%', marginRight: '24%', marginBottom: '4%'}}>Nộp bài</Button>
               <Button onClick={handdleClick1} sx={{
                 marginTop: '3%',
                 marginRight: '4%',
@@ -146,6 +145,20 @@ function WritingLayout({writing, test, writingID}:any) {
               <ScrollableTextArea data={{...task2_data}}/>
               <WritingArea setWriting={setWriting2} setWordCount={setWordCnt2}/>
           </div>
+          <ModalCustom 
+          open={openModalSm} 
+          setOpen={setOpenModalSm} 
+          path={'/course'} 
+          canClose={true} 
+          setSubmit={setSubmit}
+          message={`Bạn có chắc chắn muốn nộp bài không ?`} />
+          <ModalCustom 
+          open={openModalEt} 
+          setOpen={setOpenModalEt} 
+          path={'/course'} 
+          canClose={false} 
+          message={'Thời gian làm bài đã hết'}
+          setSubmit={setSubmit}/>
       </div>
   )
 }
