@@ -71,11 +71,32 @@ export const submitDataTests = async (formData: FormDataType) => {
 
 export async function uploadAndUpdate(objectId: string, file1: File, file2: File): Promise<void> {
     try {
-        const uploadedImage1 = await uploadImage(file1);
-        const uploadedImage2 = await uploadImage(file2);
-        const updatedObject = await updateObjectWithImage(objectId, uploadedImage1, uploadedImage2)
+        console.log(file1.type);
+        console.log(file2.type);
+        let uploadedImage1;
+        let uploadedImage2;
+        if (file1.type) {
+            uploadedImage1 = await uploadImage(file1);
 
-        console.log('Updated object:', updatedObject);
+        }
+        if (file2.type) {
+            uploadedImage2 = await uploadImage(file2);
+        }
+
+        let updatedObject = null;
+        if (uploadedImage1) {
+            updatedObject = await updateObjectWithImage(objectId, uploadedImage1, 'img1')
+        }
+        else {
+            if (uploadedImage2) {
+                updatedObject = await updateObjectWithImage(objectId, uploadedImage2, 'img2')
+            }
+            else if (uploadedImage1 && uploadedImage2) {
+                updatedObject = await updateObjectWithMultipleImage(objectId, uploadedImage1, uploadedImage2)
+            }
+        }
+
+        console.log('Updated object:success');
     } catch (error) {
         console.error('Error during upload and update:', error);
     }
@@ -103,8 +124,8 @@ export async function uploadImage(file: File): Promise<any> {
         throw error;
     }
 }
-
-export async function updateObjectWithImage(objectId: string, uploadedImage1: any, uploadedImage2: any): Promise<any> {
+//upload multiple img
+export async function updateObjectWithMultipleImage(objectId: string, uploadedImage1: any, uploadedImage2: any): Promise<any> {
     try {
         console.log(objectId);
 
@@ -132,6 +153,60 @@ export async function updateObjectWithImage(objectId: string, uploadedImage1: an
         throw error;
     }
 }
+
+
+
+export async function updateObjectWithImage(objectId: string, uploadedImage: any, img: any): Promise<any> {
+    try {
+        console.log(objectId);
+        if (img == 'img1') {
+            const response = await fetch(`http://localhost:1337/api/wrtings/${objectId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    data: {
+                        img1: uploadedImage,
+
+                    },
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update object with image');
+            }
+
+            const updatedObject = await response.json();
+            return updatedObject;
+        }
+        else {
+            const response = await fetch(`http://localhost:1337/api/wrtings/${objectId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    data: {
+                        img2: uploadedImage
+                    },
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update object with image');
+            }
+
+            const updatedObject = await response.json();
+            return updatedObject;
+        }
+
+    } catch (error) {
+        console.error('Error updating object:', error);
+        throw error;
+    }
+}
+
 
 export const updateRelationtoWriting = async (test_id: number, writing_id: number): Promise<any> => {
     try {
@@ -165,3 +240,83 @@ export const updateRelationtoWriting = async (test_id: number, writing_id: numbe
         throw error;
     }
 };
+
+
+
+// submit data edit
+
+
+export const submitEditDataWriting = async (formData: FormDataType) => {
+    let dataToServer = {
+        task1: formData.task1,
+        task2: formData.task2,
+    };
+
+    try {
+        const wrtingId = formData.id;
+        const updateResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${wrtingId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                data: dataToServer
+            }),
+        });
+        if (!updateResponse.ok) {
+            throw new Error('Failed to update writing');
+        }
+        return wrtingId;
+    } catch (error) {
+        console.error('Error updating writing:', error);
+        throw error;
+    }
+};
+
+
+export const submitEditDataTests = async (formData: FormDataType, dataEdit: any) => {
+    const isValidDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return !isNaN(date.getTime());
+    };
+
+    if (!isValidDate(formData.start_date) || !isValidDate(formData.end_date)) {
+        alert("Ngày giờ không hợp lệ. Vui lòng nhập lại.");
+        return 'false';
+    }
+
+    const isoStartDate = new Date(formData.start_date).toISOString();
+    const isoEndDate = new Date(formData.end_date).toISOString();
+
+    let dataToserver = {
+        name: formData.name,
+        Start: isoStartDate,
+        End: isoEndDate,
+        type: "Wrting",
+        Duration: formData.duration,
+    }
+    console.log(dataToserver);
+
+    // Check if test exists
+    const checkResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?filters[name][$eq]=${dataEdit.test.data.attributes.name}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    });
+    const checkData = await checkResponse.json();
+    console.log(checkData);
+
+    if (checkData.data.length > 0) {
+        const testId = checkData.data[0].id;
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests/${testId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                data: dataToserver
+            }),
+        });
+        if (!response.ok) {
+            throw new Error('Failed to update test');
+        }
+        return testId;
+    }
+
+}
+

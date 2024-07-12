@@ -27,47 +27,172 @@ const WritingTabUpload = (props: any) => {
     const [uploadedImage1, setUploadedImage1] = useState<string | null>(null);
     const [uploadedImage2, setUploadedImage2] = useState<string | null>(null);
 
-    const { formData, setFormData, openModalUploadTab, setOpenModalUploadTab } = props;
+    const { formData, setFormData, openModalUploadTab, setOpenModalUploadTab, fetchTasks } = props;
 
     const handleAddTask = (type: string) => {
         setCurrentTaskType(type);
     };
 
+    // const handleSubmit = async () => {
+    //     await submitDataWrting(formData)
+    //     console.log(formData);
+
+    //     const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings?sort=id:desc`);
+    //     const data = await res.json();
+    //     uploadAndUpdate(data.data[0].id, formData.img1, formData.img2)
+
+
+    //     const dataSubmitTests = await submitDataTests(formData);
+    //     if (dataSubmitTests != 'false') {
+    //         const responseTest = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?sort=id:desc`);
+    //         const dataTest = await responseTest.json();
+    //         const checkUpdate = await updateRelationtoWriting(dataTest.data[0].id, data.data[0].id)
+    //         if (checkUpdate) {
+    //             setFormData({
+    //                 name: "",
+    //                 task1: "",
+    //                 img1: null,
+    //                 img2: null,
+    //                 task2: '',
+    //                 Duration: 0,
+    //                 type: "Wrting",
+    //                 start_date: '',
+    //                 end_date: '',
+    //             })
+    //             setUploadedImage1(null),
+    //                 setUploadedImage2(null),
+    //                 fetchTasks();
+    //         }
+    //     }
+
+
+    // };
+
+
+    // const handleSubmit = async () => {
+    //     try {
+    //         // Submit wrting data
+
+    //         if (!formData.task1) {
+    //             alert("Vui lòng nhập nội dung Task 1.");
+    //             return;
+    //         }
+    //         if (!formData.task2) {
+    //             alert("Vui lòng nhập nội dung Task 2.");
+    //             return;
+    //         }
+
+
+    //         await submitDataWrting(formData);
+
+    //         // Fetch latest wrting data
+    //         const wrtingsResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings?sort=id:desc`);
+    //         const wrtingsData = await wrtingsResponse.json();
+    //         const latestWrtingId = wrtingsData.data[0].id;
+
+    //         // Upload and update images
+    //         await uploadAndUpdate(latestWrtingId, formData.img1, formData.img2);
+
+    //         // Submit tests data
+    //         const dataSubmitTests = await submitDataTests(formData);
+    //         if (dataSubmitTests !== 'false') {
+    //             // Fetch latest tests data
+    //             const testsResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?sort=id:desc`);
+    //             const testsData = await testsResponse.json();
+    //             const latestTestId = testsData.data[0].id;
+
+    //             // Update relation to wrting
+    //             const checkUpdate = await updateRelationtoWriting(latestTestId, latestWrtingId);
+
+    //             if (checkUpdate) {
+    //                 // Clear form data and reset images
+    //                 setFormData({
+    //                     name: "",
+    //                     task1: "",
+    //                     img1: null,
+    //                     img2: null,
+    //                     task2: '',
+    //                     Duration: 0,
+    //                     type: "Wrting",
+    //                     start_date: '',
+    //                     end_date: '',
+    //                 });
+    //                 setUploadedImage1(null);
+    //                 setUploadedImage2(null);
+
+    //                 // Fetch updated tasks list
+    //                 fetchTasks();
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.error('Error handling submit:', error);
+    //         // Handle error appropriately, e.g., show an error message to the user
+    //     }
+    // };
+
     const handleSubmit = async () => {
-        await submitDataWrting(formData)
-        const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings?sort=id:desc`);
-        const data = await res.json();
-        uploadAndUpdate(data.data[0].id, formData.img1, formData.img2)
-
-
-        const dataSubmitTests = await submitDataTests(formData);
-        if (dataSubmitTests != 'false') {
-            const responseTest = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?sort=id:desc`);
-            const dataTest = await responseTest.json();
-            const checkUpdate = await updateRelationtoWriting(dataTest.data[0].id, data.data[0].id)
-            if (checkUpdate) {
-                setFormData({
-                    name: "",
-                    task1: "",
-                    img1: null,
-                    img2: null,
-                    task2: '',
-                    duration: 0,
-                    type: "Wrting",
-                    start_date: '',
-                    end_date: '',
-                })
+        try {
+            // Kiểm tra các thông tin bắt buộc của formData
+            if (!formData.task1) {
+                alert("Vui lòng nhập nội dung Task 1.");
+                return;
             }
+            if (!formData.task2) {
+                alert("Vui lòng nhập nội dung Task 2.");
+                return;
+            }
+            if (!formData.name) {
+                alert("Vui lòng nhập nội dung name Test.");
+                return;
+            }
+            if (!formData.Duration || formData.Duration != Number) {
+                alert("Vui lòng nhập thời gian làm bài.");
+                return;
+            }
+
+            // Submit tests data
+            const dataSubmitTests = await submitDataTests(formData);
+            if (dataSubmitTests !== 'false') {
+                // Fetch latest tests data
+                const testsResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?sort=id:desc`);
+                const testsData = await testsResponse.json();
+                const latestTestId = testsData.data[0].id;
+
+                // Submit wrting data
+                await submitDataWrting(formData);
+                const wrtingsResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings?sort=id:desc`);
+                const wrtingsData = await wrtingsResponse.json();
+                const latestWrtingId = wrtingsData.data[0].id;
+                // Upload and update images
+                await uploadAndUpdate(latestWrtingId, formData.img1, formData.img2);
+
+                // Update relation to wrting
+                const checkUpdate = await updateRelationtoWriting(latestTestId, latestWrtingId);
+
+                if (checkUpdate) {
+                    // Clear form data and reset images
+                    setFormData({
+                        name: "",
+                        task1: "",
+                        img1: null,
+                        img2: null,
+                        task2: '',
+                        Duration: 0,
+                        type: "Wrting",
+                        start_date: '',
+                        end_date: '',
+                    });
+                    setUploadedImage1(null);
+                    setUploadedImage2(null);
+
+                    // Fetch updated tasks list
+                    fetchTasks();
+                }
+            }
+        } catch (error) {
+            console.error('Error handling submit:', error);
+            // Handle error appropriately, e.g., show an error message to the user
         }
-        // const responseTest = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?sort=id:desc`);
-        // const dataTest = await responseTest.json();
-        // const checkUpdate = await updateRelationtoWriting(dataTest.data[0].id, data.data[0].id)
-
-        // //get last data
-        // // const latestUpdatedData = data.data.reduce((latest: any, current: any) => {
-        // //     return new Date(latest.attributes.updatedAt) > new Date(current.attributes.updatedAt) ? latest : current;
-        // // });
-
     };
 
     const handleClose = () => {
@@ -77,7 +202,7 @@ const WritingTabUpload = (props: any) => {
 
     const handleDurationChange = (event: any) => {
         const value = event.target.value as number;
-        setFormData({ ...formData, duration: value });
+        setFormData({ ...formData, Duration: value });
     };
 
 

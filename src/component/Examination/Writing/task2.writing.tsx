@@ -12,7 +12,14 @@ const WritingTask2 = (props: any) => {
 
     const { formData, setFormData, uploadedImage2, setUploadedImage2 } = props;
 
-
+    React.useEffect(() => {
+        if (formData.img2 && formData.img2.data && formData.img2.data.length > 0) {
+            const imageUrl = formData.img2.data[0].attributes.formats ?
+                formData.img2.data[0].attributes.formats.thumbnail.url :
+                formData.img2.data[0].attributes.url;
+            setUploadedImage2(`${process.env.NEXT_PUBLIC_STRAPI_LINK_URL}${imageUrl} `);
+        }
+    }, [formData, setUploadedImage2]);
 
     const handleFileChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
