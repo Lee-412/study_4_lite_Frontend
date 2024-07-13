@@ -1,4 +1,5 @@
 import TestContainer from "@/app/course/TestContainer";
+import TestConnection from "@/component/TestConnection/TestConnection";
 
 const Test_api_url = `${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`
 
@@ -9,7 +10,10 @@ const TestPage = async() => {
     
 
     return (
-        <TestContainer tests={data.data}/>
+        <>
+            <TestContainer tests={data.data}/>
+            <TestConnection />
+        </>
     )
 };
 

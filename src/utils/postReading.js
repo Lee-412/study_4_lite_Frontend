@@ -1,3 +1,5 @@
+'use server'
+
 class readingTest {
     constructor() {
         this.form = {
@@ -36,7 +38,7 @@ class readingTest {
     }
   
     async addRelationTest(id) {
-        const response = await fetch('http://127.0.0.1:1337/api/tests', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`, {
             headers: {
             'Cache-Control': 'no-cache',
             },
@@ -52,7 +54,7 @@ class readingTest {
     }
 
     async submitForm() {
-        const response = await fetch("http://127.0.0.1:1337/api/reading-tests", { 
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/reading-tests`, { 
         method: "POST", 
         body: JSON.stringify({data :this.form}), 
         headers: { 
