@@ -13,18 +13,44 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import TestCard from '@/component/TestCard/TestCard';
 import { Test } from '@/utils/type';
+import { useRouter } from 'next/navigation';
 
 
-function TestContainer({tests}:any) {
+function TestContainer({ tests }: any) {
+
+    const router = useRouter();
+
+    // state lưu trữ data user
+
+    const [userData, setUserData] = React.useState();
+
+    useEffect(() => {
+        const userDataString = sessionStorage.getItem('userData');
+
+        if (!userDataString) {
+            sessionStorage.clear();
+            router.push('/');
+        }
+        else {
+            console.log(userDataString);
+
+            setUserData(JSON.parse(userDataString))
+        }
+    }, []);
+    // state lưu trữ data user
+
+    console.log(userData);
+
+
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredTests, setFilteredTests] = useState(tests);
 
     //console.log(tests);
-    
+
 
     useEffect(() => {
         const filterCourses = tests.filter(
-            (test:Test) =>
+            (test: Test) =>
                 test.attributes.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setFilteredTests(filterCourses);
@@ -62,7 +88,7 @@ function TestContainer({tests}:any) {
 
 
             <Grid container spacing={2}>
-                {filteredTests.map((test:Test) => (
+                {filteredTests.map((test: Test) => (
                     <TestCard key={test.id} test={test} />
                 ))}
             </Grid>

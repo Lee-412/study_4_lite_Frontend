@@ -16,10 +16,12 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import WritingTabEdit from './writing.edit';
 
 export type FormDataType = {
-    name: '';
+
+    id: number;
+    name: string;
     task1: string;
-    img1: ImageType | null;
-    img2: ImageType | null;
+    img1: ImageType | null | File;
+    img2: ImageType | null | File;
     task2: string;
     duration: number;
     type: string;
@@ -93,6 +95,8 @@ export type TaskType = {
 const WritingTab = () => {
 
     const [formData, setFormData] = React.useState<FormDataType>({
+
+        id: 0,
         name: '',
         task1: '',
         img1: null,
@@ -128,7 +132,7 @@ const WritingTab = () => {
     })
 
     const [tasks, setTasks] = React.useState<TaskType[]>([]);
-    const [taskId, setTaskId] = React.useState<number>(0);
+    // const [taskId, setTaskId] = React.useState<number>(0);
     const [editingTask, setEditingTask] = React.useState<TaskType | null>(null);
 
 
@@ -150,8 +154,8 @@ const WritingTab = () => {
                 id: item.id,
                 task1: item.attributes.task1,
                 task2: item.attributes.task2,
-                // img1: item.attributes.img1,
-                // img2: item.attributes.img2,
+                img1: item.attributes.img1,
+                img2: item.attributes.img2,
                 test: item.attributes.test
             })));
             console.log(tasks);
@@ -187,9 +191,58 @@ const WritingTab = () => {
 
     };
 
-    const handleDeleteTask = (id: number) => {
-        alert("có muốn xoá thật không, hỏi thật")
-        // setTasks(tasks.filter(task => task.id !== id));
+    const handleDeleteTask = async (taskId: number) => {
+        try {
+
+            if (!window.confirm("Muốn xoá thật không")) return;
+
+            console.log(taskId);
+
+
+            const taskResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${taskId}?populate=*`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!taskResponse.ok) {
+                throw new Error('Failed to fetch the wrting task');
+            }
+
+            const taskData = await taskResponse.json();
+            const testId = taskData.data.attributes.test.data.id;
+
+            const deleteWrtingResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${taskId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!deleteWrtingResponse.ok) {
+                throw new Error('Failed to delete the wrting task');
+            }
+
+            const deleteTestResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests/${testId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!deleteTestResponse.ok) {
+                throw new Error('Failed to delete the test');
+            }
+
+
+            setTasks(tasks.filter(task => task.id !== taskId));
+
+            const data = await deleteTestResponse.json();
+            console.log('Task and associated test deleted successfully:', data);
+
+        } catch (error) {
+            console.error('Error deleting task and associated test:', error);
+        }
     };
 
     const handleSaveTask = () => {
@@ -242,25 +295,7 @@ const WritingTab = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {/* {tasks.map((task, index) => (
-                            <TableRow key={task.id}>
-                                <TableCell>{task.test.data.attributes.name}</TableCell>
-                                <TableCell>{task.test.data.attributes.Start}</TableCell>
-                                <TableCell>{task.test.data.attributes.End}</TableCell>
-                                <TableCell>{task.task1}</TableCell>
-                                <TableCell>{task.task2}</TableCell>
 
-
-                                <TableCell>
-                                    <IconButton onClick={() => handleEditTask(task, task.id)}>
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton onClick={() => handleDeleteTask(task.id)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                        ))} */}
                         {tasks.map((task, index) => (
                             task.test.data ? (
                                 <TableRow key={task.id}>
@@ -288,6 +323,7 @@ const WritingTab = () => {
                 setFormData={setFormData}
                 setOpenModalUploadTab={setOpenModalUploadTab}
                 openModalUploadTab={openModalUploadTab}
+                fetchTasks={fetchTasks}
             />
             <WritingTabEdit
                 dataEdit={dataEdit}
@@ -296,7 +332,8 @@ const WritingTab = () => {
                 setFormData={setFormData}
                 setOpenModalEditTab={setOpenModalEditTab}
                 openModalEditTab={openModalEditTab}
-                handleSaveTask={handleSaveTask}
+                fetchTasks={fetchTasks}
+
             />
         </Box>
     );

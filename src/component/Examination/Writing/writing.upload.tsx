@@ -3,14 +3,12 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
-import { duration, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import WritingTask1 from './task1.writing';
 import WritingTask2 from './task2.writing';
 import { FormDataType } from './writing';
-import { error } from 'console';
+import { submitDataTests, submitDataWrting, updateRelationtoWriting, uploadAndUpdate } from '@/utils/api';
+import { duration } from '@mui/material';
+
 export interface dataWritingProps {
     formData: FormDataType,
     setFormData: (formData: FormDataType) => void,
@@ -29,114 +27,77 @@ const WritingTabUpload = (props: any) => {
     const [uploadedImage1, setUploadedImage1] = useState<string | null>(null);
     const [uploadedImage2, setUploadedImage2] = useState<string | null>(null);
 
-    const { formData, setFormData, openModalUploadTab, setOpenModalUploadTab } = props;
+    const { formData, setFormData, openModalUploadTab, setOpenModalUploadTab, fetchTasks } = props;
 
     const handleAddTask = (type: string) => {
         setCurrentTaskType(type);
     };
 
+
     const handleSubmit = async () => {
-        console.log(formData);
-        submitDataWrting(formData)
-        const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings?sort=id:desc`);
-        const data = await res.json();
-        console.log(data.data[0]);
+        try {
+            // Kiểm tra các thông tin bắt buộc của formData
+            if (!formData.task1) {
+                alert("Vui lòng nhập nội dung Task 1.");
+                return;
+            }
+            if (!formData.task2) {
+                alert("Vui lòng nhập nội dung Task 2.");
+                return;
+            }
+            if (!formData.name) {
+                alert("Vui lòng nhập nội dung name Test.");
+                return;
+            }
+            if (!formData.Duration || formData.Duration != Number) {
+                alert("Vui lòng nhập thời gian làm bài.");
+                return;
+            }
 
+            // Submit tests data
+            const dataSubmitTests = await submitDataTests(formData);
+            if (dataSubmitTests !== 'false') {
+                // Fetch latest tests data
+                const testsResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?sort=id:desc`);
+                const testsData = await testsResponse.json();
+                const latestTestId = testsData.data[0].id;
 
-        //get last data
-        // const latestUpdatedData = data.data.reduce((latest: any, current: any) => {
-        //     return new Date(latest.attributes.updatedAt) > new Date(current.attributes.updatedAt) ? latest : current;
-        // });
+                // Submit wrting data
+                await submitDataWrting(formData);
+                const wrtingsResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings?sort=id:desc`);
+                const wrtingsData = await wrtingsResponse.json();
+                const latestWrtingId = wrtingsData.data[0].id;
+                // Upload and update images
+                await uploadAndUpdate(latestWrtingId, formData.img1, formData.img2);
 
-        uploadAndUpdate(data.data[0].id, formData.img1, formData.img2)
+                // Update relation to wrting
+                const checkUpdate = await updateRelationtoWriting(latestTestId, latestWrtingId);
+
+                if (checkUpdate) {
+                    // Clear form data and reset images
+                    setFormData({
+                        name: "",
+                        task1: "",
+                        img1: null,
+                        img2: null,
+                        task2: '',
+                        Duration: 0,
+                        type: "Wrting",
+                        start_date: '',
+                        end_date: '',
+                    });
+                    setUploadedImage1(null);
+                    setUploadedImage2(null);
+
+                    // Fetch updated tasks list
+                    fetchTasks();
+                }
+            }
+        } catch (error) {
+            console.error('Error handling submit:', error);
+
+        }
     };
-
-    const submitDataWrting = async (formData: FormDataType) => {
-        let dataToserver = {
-            task1: formData.task1,
-            task2: formData.task2,
-        }
-        const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                data: dataToserver
-            }),
-        })
-
-        if (res.status == 200) {
-            alert("oke")
-
-        }
-        else {
-            alert("vl")
-        }
-
-    }
-
-    async function uploadImage(file: File): Promise<any> {
-        const formData = new FormData();
-        formData.append('files', file);
-
-        try {
-            const response = await fetch('http://localhost:1337/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to upload image');
-            }
-
-            const data = await response.json();
-            return data[0]; // Giả sử bạn chỉ tải lên một ảnh
-        } catch (error) {
-            console.error('Error uploading image:', error);
-            throw error;
-        }
-    }
-
-    async function updateObjectWithImage(objectId: string, uploadedImage1: any, uploadedImage2: any): Promise<any> {
-        try {
-            console.log(objectId);
-
-            const response = await fetch(`http://localhost:1337/api/wrtings/${objectId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    data: {
-                        img1: uploadedImage1,
-                        img2: uploadedImage2
-                    },
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to update object with image');
-            }
-
-            const updatedObject = await response.json();
-            return updatedObject;
-        } catch (error) {
-            console.error('Error updating object:', error);
-            throw error;
-        }
-    }
-
-    async function uploadAndUpdate(objectId: string, file1: File, file2: File): Promise<void> {
-        try {
-            const uploadedImage1 = await uploadImage(file1);
-            const uploadedImage2 = await uploadImage(file2);
-            const updatedObject = await updateObjectWithImage(objectId, uploadedImage1, uploadedImage2)
-
-            console.log('Updated object:', updatedObject);
-        } catch (error) {
-            console.error('Error during upload and update:', error);
-        }
-    }
-
 
     const handleClose = () => {
         setOpenModalUploadTab(false);
@@ -145,20 +106,24 @@ const WritingTabUpload = (props: any) => {
 
     const handleDurationChange = (event: any) => {
         const value = event.target.value as number;
-        setFormData({ ...formData, duration: value });
+        setFormData({ ...formData, Duration: value });
     };
 
 
     const handleTimeChange = (event: any) => {
+        console.log(event.target.value);
+
+
         setFormData({
             ...formData,
             start_date: event.target.value
         });
     };
     const handleTimeEndChange = (event: any) => {
+        console.log(event.target.value);
         setFormData({
             ...formData,
-            start_date: event.target.value
+            end_date: event.target.value
         });
     };
 
@@ -235,7 +200,7 @@ const WritingTabUpload = (props: any) => {
                         label="Strat"
                         type="datetime-local"
                         name="start"
-                        value={formData.time}
+                        value={formData.start_date}
                         onChange={handleTimeChange}
                         InputLabelProps={{
                             shrink: true,
@@ -250,7 +215,7 @@ const WritingTabUpload = (props: any) => {
                         label="End"
                         type="datetime-local"
                         name="end"
-                        value={formData.time}
+                        value={formData.end_date}
                         onChange={handleTimeEndChange}
                         InputLabelProps={{
                             shrink: true,
@@ -280,3 +245,5 @@ const WritingTabUpload = (props: any) => {
 };
 
 export default WritingTabUpload;
+
+

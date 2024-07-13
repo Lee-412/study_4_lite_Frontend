@@ -14,6 +14,9 @@ import ContactAdmin from '@/component/Admin/contact.admin';
 import ClassManagement from '@/component/Admin/class.management';
 import ExamManagement from '@/component/Admin/exam.management';
 import Logout from '@/component/Admin/logout.admin';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 
 
 function Copyright() {
@@ -174,6 +177,31 @@ theme = {
 const drawerWidth = 256;
 
 export default function Paperbase() {
+    const router = useRouter();
+    // state lưu trữ data user
+    const [userData, setUserData] = React.useState();
+
+    useEffect(() => {
+        const userDataString = sessionStorage.getItem('userData');
+        if (!userDataString) {
+            router.push('/');
+        }
+        else {
+            const dataServer = JSON.parse(userDataString);
+            console.log(dataServer);
+
+            if (dataServer.user.authen == 'Admin') {
+                setUserData(dataServer)
+            } else {
+                sessionStorage.clear();
+                router.push('/');
+            }
+        }
+    }, []);
+
+    // state lưu trữ data user
+
+    console.log(userData);
 
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [activeComponent, setActiveComponent] = React.useState('Quản lý học viên');
@@ -201,38 +229,48 @@ export default function Paperbase() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-                <CssBaseline />
-                <Box
-                    component="nav"
-                    sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                >
-                    {isSmUp ? null : (
-                        <NavigatorApp
-                            PaperProps={{ style: { width: drawerWidth } }}
-                            variant="temporary"
-                            open={mobileOpen}
-                            onClose={handleDrawerToggle}
-                            setActiveComponent={setActiveComponent}
-                        />
-                    )}
-                    <NavigatorApp
-                        PaperProps={{ style: { width: drawerWidth } }}
-                        sx={{ display: { sm: 'block', xs: 'none' } }}
-                        setActiveComponent={setActiveComponent}
-                    />
-                </Box>
-                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <HeaderAppAdmin onDrawerToggle={handleDrawerToggle} />
-                    <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-                        {renderContent()}
+        <>
+            {userData ?
+
+                <ThemeProvider theme={theme}>
+                    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+                        <CssBaseline />
+                        <Box
+                            component="nav"
+                            sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                        >
+                            {isSmUp ? null : (
+                                <NavigatorApp
+                                    PaperProps={{ style: { width: drawerWidth } }}
+                                    variant="temporary"
+                                    open={mobileOpen}
+                                    onClose={handleDrawerToggle}
+                                    setActiveComponent={setActiveComponent}
+                                />
+                            )}
+                            <NavigatorApp
+                                PaperProps={{ style: { width: drawerWidth } }}
+                                sx={{ display: { sm: 'block', xs: 'none' } }}
+                                setActiveComponent={setActiveComponent}
+                            />
+                        </Box>
+                        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                            <HeaderAppAdmin onDrawerToggle={handleDrawerToggle} />
+                            <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
+                                {renderContent()}
+                            </Box>
+                            <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
+                                <Copyright />
+                            </Box>
+                        </Box>
                     </Box>
-                    <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
-                        <Copyright />
-                    </Box>
-                </Box>
-            </Box>
-        </ThemeProvider>
+                </ThemeProvider>
+                :
+                <> </>
+            }
+
+
+        </>
+
     );
 }
