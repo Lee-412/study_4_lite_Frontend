@@ -181,23 +181,23 @@ export default function Paperbase() {
     // state lưu trữ data user
     const [userData, setUserData] = React.useState();
 
-    useEffect(() => {
-        const userDataString = sessionStorage.getItem('userData');
-        if (!userDataString) {
-            router.push('/');
-        }
-        else {
-            const dataServer = JSON.parse(userDataString);
-            console.log(dataServer);
+    // useEffect(() => {
+    //     const userDataString = sessionStorage.getItem('userData');
+    //     if (!userDataString) {
+    //         router.push('/');
+    //     }
+    //     else {
+    //         const dataServer = JSON.parse(userDataString);
+    //         console.log(dataServer);
 
-            if (dataServer.user.authen == 'Admin') {
-                setUserData(dataServer)
-            } else {
-                sessionStorage.clear();
-                router.push('/');
-            }
-        }
-    }, []);
+    //         if (dataServer.user.authen == 'Admin') {
+    //             setUserData(dataServer)
+    //         } else {
+    //             sessionStorage.clear();
+    //             router.push('/');
+    //         }
+    //     }
+    // }, []);
 
     // state lưu trữ data user
 
@@ -230,7 +230,7 @@ export default function Paperbase() {
 
     return (
         <>
-            {userData ?
+            {/* {userData ? */}
 
                 <ThemeProvider theme={theme}>
                     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
@@ -265,10 +265,7 @@ export default function Paperbase() {
                         </Box>
                     </Box>
                 </ThemeProvider>
-                :
                 <> </>
-            }
-
 
         </>
 

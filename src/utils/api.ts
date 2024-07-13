@@ -250,6 +250,8 @@ export const submitEditDataWriting = async (formData: FormDataType) => {
     let dataToServer = {
         task1: formData.task1,
         task2: formData.task2,
+        // task3: formData.task3,
+        // task4: formData.task4,
     };
 
     try {

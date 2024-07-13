@@ -59,6 +59,24 @@ export class ListeningTest {
         })
     }
 
+    removeQuestion(questionair: string) {
+        this.form.Listening = this.form.Listening.filter(
+          (item: any) => !(item.__component === "ielts-listening.questionair" && item.Questionaire === questionair)
+        );
+      }
+
+    removeFilling(question: string) {
+        this.form.Listening = this.form.Listening.filter(
+          (item: any) => !(item.__component === "ielts-listening.filling" && item.Question === question)
+        );
+      }
+    
+    removeMultipleChoice(question: string) {
+        this.form.Listening = this.form.Listening.filter(
+          (item: any) => !(item.__component === "ielts-listening.multiple-choice" && item.Question === question)
+        );
+      }
+
     async addRelationTest(id:any){
         const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`);
         let data = await response.json();
@@ -79,6 +97,7 @@ export class ListeningTest {
                 "Content-type": "application/json"
             }});
             const dt = await response.json();
+            console.log(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-tests?populate[listening][populate]=*`,)
             return dt
     }
 

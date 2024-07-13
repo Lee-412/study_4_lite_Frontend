@@ -79,7 +79,7 @@ const WritingTabEdit = (props: dataWritingProps) => {
                 // Update images
                 if (formData.img1 && formData.img2) {
                     console.log(formData.img1);
-                    console.log(formData.img1);
+                    console.log(formData.img2);
                     console.log(formData.img1 as unknown as File);
 
 

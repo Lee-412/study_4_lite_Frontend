@@ -22,7 +22,7 @@ function TestConnection() {
         //     uploadMedia(form)
         //     .then((data)=>{console.log(data);
         //     })
-        // }
+        // } 
         if(file !== undefined) {
             let listening_test = new ListeningTest()
             listening_test.addImage(file.files[0]).then(()=>{
