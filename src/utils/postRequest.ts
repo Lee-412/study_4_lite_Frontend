@@ -23,3 +23,17 @@ export async function postRequest(data:object, link: string) {
     return result
 
 }
+
+export const uploadMedia = async(form:any) =>{
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/upload`, {
+            method: 'POST',
+            body: form,
+        })
+        const data = await response.json()
+        return data
+    } catch(e) {
+        throw e
+    }
+    
+}

@@ -11,15 +11,10 @@ const TestPage = async () => {
 
 
 
-    return (
-<<<<<<< HEAD
-        <>
+    return (        <>
             <TestContainer tests={data.data}/>
-            <TestConnection />
+            {/* <TestConnection /> */}
         </>
-=======
-        <TestContainer tests={data.data} />
->>>>>>> 6829761dd08c2471ca6ea88794f9e6002ad56b9b
     )
 };
 
