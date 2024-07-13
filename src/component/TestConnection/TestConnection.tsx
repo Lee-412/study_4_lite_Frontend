@@ -1,12 +1,10 @@
 'use client'
 import { ListeningTest } from '@/utils/postListening'
-import { uploadMedia } from '@/utils/postRequest'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 function TestConnection() {
     const [file, setFile] = useState<any>()
     const [file_in, setFileIn] = useState<File>()
-    //fetch_listening()
     useEffect(()=>{
         if(file !== undefined) {
             file.files !== undefined? console.log(file.files) :  console.log('no result')
@@ -15,14 +13,6 @@ function TestConnection() {
     }, [file_in, file])
     
     function onClick () {
-        // console.log(file_in);
-        // const form = new FormData()
-        // if(file !== undefined) {
-        //     form.append('files', file.files[0])
-        //     uploadMedia(form)
-        //     .then((data)=>{console.log(data);
-        //     })
-        // }
         if(file !== undefined) {
             let listening_test = new ListeningTest()
             listening_test.addImage(file.files[0]).then(()=>{
@@ -41,9 +31,6 @@ function TestConnection() {
                 })
             })
         }
-       
-        // .then((item)=>{console.log(item);
-        // })
         }
   return (
     <div>

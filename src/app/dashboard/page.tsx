@@ -183,13 +183,14 @@ export default function Paperbase() {
 
     useEffect(() => {
         const userDataString = sessionStorage.getItem('userData');
+        
         if (!userDataString) {
             router.push('/');
         }
         else {
             const dataServer = JSON.parse(userDataString);
             console.log(dataServer);
-
+            console.log(dataServer.user.authen);
             if (dataServer.user.authen == 'Admin') {
                 setUserData(dataServer)
             } else {
@@ -231,7 +232,7 @@ export default function Paperbase() {
     return (
         <>
             {userData ?
-
+            
                 <ThemeProvider theme={theme}>
                     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
                         <CssBaseline />
@@ -265,10 +266,9 @@ export default function Paperbase() {
                         </Box>
                     </Box>
                 </ThemeProvider>
-                :
-                <> </>
+               :
+               <></>
             }
-
 
         </>
 
