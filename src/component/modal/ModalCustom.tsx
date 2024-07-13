@@ -36,30 +36,43 @@ const btn_style_cf = {
 
 
 
-export default function GeneralModal({open, setOpen, type, testID}:any) {
+export default function ModalCustom(props:any) {
+  const {setSubmit} = props
   const Router = useRouter()
-  
+  console.log(props.path);
   const handleReady = () => {
-      Router.push(`/course/test/${type}-${testID}`)
+    if(props.setSubmit !== undefined) {
+        setSubmit(true)
+        console.log(props.path);
+        Router.push(`${props.path}`)
+    } else {
+      Router.push(`${props.path}`)
+    }
   }
-  const handleClose = () => setOpen(false);
+  const handleClose = () => props.setOpen(false);
+
+  const ButtonCloseView = () => {
+    return props.canClose ? (<Button sx={btn_style} size={"large"} onClick={handleClose}>X</Button>) : <></>
+  }
   return (
     <div>
       <Modal
-        open={open}
+        open={props.open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-            <Button sx={btn_style} size={"large"} onClick={handleClose}>X</Button>
+            {ButtonCloseView()}
             <Typography id="modal-modal-title" variant="h6" component="h2">
-                Text in a modal
+                Thông báo
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                {props.message}
             </Typography>
-            <Button sx={btn_style_cf} size={"medium"} onClick={handleReady}>Bắt đầu làm bài</Button>
+            <Button sx={btn_style_cf} size={"medium"} onClick={
+              handleReady
+              }>Xác nhận</Button>
         </Box>
       </Modal>
     </div>
