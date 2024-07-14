@@ -10,6 +10,8 @@ import Part4 from './part4';
 import { FormDataType } from './listening';
 import { submitDataTests, submitDataWrting, updateRelationtoWriting, uploadAndUpdate } from '@/utils/api';
 import { duration } from '@mui/material';
+import ListeningTab from './listening.edit';
+import { ListeningTest } from '@/utils/postListening';
 
 export interface ListeningProps {
     formData: FormDataType,
@@ -24,12 +26,16 @@ interface formDataImg {
 
 const ListeningTabUpload = (props: any) => {
 
-
+    const lt = new ListeningTest();
     const [currentTaskType, setCurrentTaskType] = useState<string | null>(null);
     const [uploadedImage1, setUploadedImage1] = useState<string | null>(null);
     const [uploadedImage2, setUploadedImage2] = useState<string | null>(null);
     const [uploadedImage3, setUploadedImage3] = useState<string | null>(null);
     const [uploadedImage4, setUploadedImage4] = useState<string | null>(null);
+    const [uploadedAudio1, setUploadedAudio1] = useState<string | null>(null);
+    const [uploadedAudio2, setUploadedAudio2] = useState<string | null>(null);
+    const [uploadedAudio3, setUploadedAudio3] = useState<string | null>(null);
+    const [uploadedAudio4, setUploadedAudio4] = useState<string | null>(null);
 
     const { formData, setFormData, openModalUploadTab, setOpenModalUploadTab, fetchTasks } = props;
 
@@ -160,16 +166,16 @@ const ListeningTabUpload = (props: any) => {
             >
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                     <Button variant="outlined" onClick={() => handleAddTask('task1')} disabled={currentTaskType === 'task1'}>
-                        Add Task 1
+                        Task 1
                     </Button>
                     <Button variant="outlined" onClick={() => handleAddTask('task2')} disabled={currentTaskType === 'task2'}>
-                        Add Task 2
+                        Task 2
                     </Button>
                     <Button variant="outlined" onClick={() => handleAddTask('task3')} disabled={currentTaskType === 'task3'}>
-                        Add Task 3
+                        Task 3
                     </Button>
                     <Button variant="outlined" onClick={() => handleAddTask('task4')} disabled={currentTaskType === 'task4'}>
-                        Add Task 4
+                        Task 4
                     </Button>
                 </Box>
 
@@ -181,6 +187,8 @@ const ListeningTabUpload = (props: any) => {
                                 setFormData={setFormData}
                                 uploadedImage1={uploadedImage1}
                                 setUploadedImage1={setUploadedImage1}
+                                uploadedAudio1={uploadedAudio1}
+                                setUploadedAudio1={setUploadedAudio1}
                             />
                         )}
                         {currentTaskType === 'task2' && (
@@ -189,14 +197,18 @@ const ListeningTabUpload = (props: any) => {
                                 setFormData={setFormData}
                                 uploadedImage2={uploadedImage2}
                                 setUploadedImage2={setUploadedImage2}
+                                uploasedAudio2={uploadedAudio2}
+                                setUploadedAudio2={setUploadedAudio2}
                             />
                         )}
                         {currentTaskType === 'task3' && (
                             <Part3
                                 formData={formData}
                                 setFormData={setFormData}
-                                uploadedImage2={uploadedImage3}
-                                setUploadedImage2={setUploadedImage3}
+                                uploadedImage3={uploadedImage3}
+                                setUploadedImage3={setUploadedImage3}
+                                uploadedAudio3={uploadedAudio3}
+                                setUploadedAudio3={setUploadedAudio3}
                             />
                         )}
                         {currentTaskType === 'task4' && (
@@ -205,6 +217,8 @@ const ListeningTabUpload = (props: any) => {
                                 setFormData={setFormData}
                                 uploadedImage4={uploadedImage4}
                                 setUploadedImage4={setUploadedImage4}
+                                uploadedAudio4={uploadedAudio4}
+                                setUploadedAudio4={setUploadedAudio4}
                             />
                         )}
 
@@ -261,9 +275,9 @@ const ListeningTabUpload = (props: any) => {
                     />
                 </Box>
                 <Box sx={{ mt: 2 }}>
-                    {/* <Button variant="outlined" onClick={handleSubmit}>
+                    <Button variant="outlined" onClick={lt.submitForm}>
                         Submit
-                    </Button> */}
+                    </Button>
                 </Box>
             </Box>
         </Modal>

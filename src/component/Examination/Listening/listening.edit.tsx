@@ -32,6 +32,10 @@ const ListeningTabEdit = (props: ListeningDataProps) => {
     const [uploadedImage2, setUploadedImage2] = useState<string | null>(null);
     const [uploadedImage3, setUploadedImage3] = useState<string | null>(null);
     const [uploadedImage4, setUploadedImage4] = useState<string | null>(null);
+    const [uploadAudio1, setUploadAudio1] = useState<string | null>(null);
+    const [uploadAudio2, setUploadAudio2] = useState<string | null>(null);
+    const [uploadAudio3, setUploadAudio3] = useState<string | null>(null);
+    const [uploadAudio4, setUploadAudio4] = useState<string | null>(null);
 
     console.log(dataEdit);
     console.log(formData);
@@ -183,6 +187,8 @@ const ListeningTabEdit = (props: ListeningDataProps) => {
                                 setFormData={setFormData}
                                 uploadedImage1={uploadedImage1}
                                 setUploadedImage1={setUploadedImage1}
+                                uploadAudio1={uploadAudio1}
+                                setUploadAudio1={setUploadAudio1}
                             />
                         )}
                         {currentTaskType === 'task2' && (
@@ -191,6 +197,8 @@ const ListeningTabEdit = (props: ListeningDataProps) => {
                                 setFormData={setFormData}
                                 uploadedImage2={uploadedImage2}
                                 setUploadedImage2={setUploadedImage2}
+                                uploadAudio2={uploadAudio2}
+                                setUploadAudio2={setUploadAudio2}
                             />
                         )}
                         {currentTaskType === 'task3' && (
@@ -199,6 +207,8 @@ const ListeningTabEdit = (props: ListeningDataProps) => {
                                 setFormData={setFormData}
                                 uploadedImage3={uploadedImage3}
                                 setUploadedImage3={setUploadedImage3}
+                                uploadAudio3={uploadAudio3}
+                                setUploadAudio3={setUploadAudio3}
                             />
                         )}
                         {currentTaskType === 'task4' && (
@@ -207,6 +217,8 @@ const ListeningTabEdit = (props: ListeningDataProps) => {
                                 setFormData={setFormData}
                                 uploadedImage4={uploadedImage4}
                                 setUploadedImage4={setUploadedImage4}
+                                uploadAudio4={uploadAudio4}
+                                setUploadAudio4={setUploadAudio4}
                             />
                         )}
                     </Box>
