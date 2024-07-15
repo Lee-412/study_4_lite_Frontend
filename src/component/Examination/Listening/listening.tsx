@@ -23,15 +23,19 @@ export type FormDataType = {
   task1: string;
   img1: ImageType | null | File;
   audio1: ImageType | null | File;
+  question1: QuestionType | null; 
   task2: string; 
   img2: ImageType | null | File;
   audio2: ImageType | null | File;
+  question2: QuestionType | null;
   task3: string;
   img3: ImageType | null | File;
   audio3: ImageType | null | File;
+  question3: QuestionType | null;
   task4: string;
   img4: ImageType | null | File;
   audio4: ImageType | null | File;
+  question4: QuestionType | null;
   duration: number;
   type: string;
   start_date: string;
@@ -77,6 +81,24 @@ export type ImageType = {
   }[];
 };
 //change task,image,audio
+
+export type QuestionType = {
+  id: number;
+  type: 'multiplechoice' | 'filling';
+  content: string;
+  multiplechoices: IMultipleChoice[];
+  fillings: IFilling[];
+};
+
+interface IFilling {
+    id: number;
+    correctAnswer: string;
+  }
+interface IMultipleChoice {
+    id: number;
+    content: string;
+    isCorrect: boolean;
+  }
 
 export type TaskType = {
   id: number;
@@ -132,15 +154,19 @@ const [formData, setFormData] = React.useState<FormDataType>({
   task1: '',
   img1: null,
   audio1: null,
+  question1: null,
   task2: '',
   img2: null,
   audio2: null,
+  question2: null,
   task3: '',
   img3: null,
   audio3: null,
+  question3: null,
   task4: '',
   img4: null,
   audio4: null,
+  question4: null,
   duration: 0,
   type: 'Writing',
   start_date: '',

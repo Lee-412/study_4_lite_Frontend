@@ -48,15 +48,19 @@ const ListeningTabEdit = (props: ListeningDataProps) => {
                 task1: dataEdit.task1,
                 img1: dataEdit.img1,
                 audio1: dataEdit.audio1,
+                question1: dataEdit.question1,
                 task2: dataEdit.task2,
                 img2: dataEdit.img2,
                 audio2: dataEdit.audio2,
+                question2: dataEdit.question2,
                 task3: dataEdit.task3,
                 img3: dataEdit.img3,
                 audio3: dataEdit.audio3,
+                question3: dataEdit.question3,
                 task4: dataEdit.task4,
                 img4: dataEdit.img4,
                 audio4: dataEdit.audio4,
+                question4: dataEdit.question4,
                 duration: dataEdit.test.data.attributes.Duration,
                 type: dataEdit.test.data.attributes.type,
                 start_date: dataEdit.test.data.attributes.Start,
@@ -225,6 +229,23 @@ const ListeningTabEdit = (props: ListeningDataProps) => {
                 )}
 
                 <Box sx={{ p: 2, display: 'flex', alignItems: 'center', mb: 2, flexDirection: "column" }}>
+                    <TextField
+                        fullWidth
+                        label="Question"
+                        name="question"
+                        value={formData.task1}
+                        onChange={(e) => setFormData({ ...formData, task1: e.target.value })}
+                        sx={{ mb: 2 }}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Answer"
+                        name="answer"
+                        value={formData.task1}
+                        onChange={(e) => setFormData({ ...formData, task1: e.target.value })}
+                        sx={{ mb: 2 }}
+                    />
+
                     <TextField
                         fullWidth
                         label="Test Duration"

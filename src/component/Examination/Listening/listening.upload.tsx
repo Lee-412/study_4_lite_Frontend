@@ -228,16 +228,33 @@ const ListeningTabUpload = (props: any) => {
                 <Box sx={{ p: 2, display: 'flex', alignItems: 'center', mb: 2, flexDirection: "column" }}>
                     <TextField
                         fullWidth
+                        label="Question"
+                        name="question"
+                        value={formData.task1}
+                        onChange={(e) => setFormData({ ...formData, task1: e.target.value })}
+                        sx={{ mb: 2 }}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Answer"
+                        name="answer"
+                        value={formData.task1}
+                        onChange={(e) => setFormData({ ...formData, task1: e.target.value })}
+                        sx={{ mb: 2 }}
+                    />
+                    
+                    <TextField
+                        fullWidth
                         label="Test Duration"
                         name="testDuration"
-                        value={formData.Duration}
+                        value={formData.task1}
                         onChange={handleDurationChange}
                         sx={{ mb: 2 }}
                     />
 
                     <TextField
                         fullWidth
-                        label="Strat"
+                        label="Start"
                         type="datetime-local"
                         name="start"
                         value={formData.start_date}
