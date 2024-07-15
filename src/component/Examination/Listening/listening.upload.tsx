@@ -8,20 +8,18 @@ import Part2 from './part2';
 import Part3 from './part3';
 import Part4 from './part4';
 import { FormDataType } from './listening';
-import { submitDataTests, submitDataWrting, updateRelationtoWriting, uploadAndUpdate } from '@/utils/api';
-import { duration } from '@mui/material';
-import ListeningTab from './listening.edit';
 import { ListeningTest } from '@/utils/postListening';
 
 export interface ListeningProps {
     formData: FormDataType,
-    setFormData: (formData: FormDataType) => void,
     openModalUploadTab: boolean,
+    // answerMulipleChoice: IMultipleChoice,
+    // answerFilling: IFilling,
+    // questionType: QuestionType,
+    setFormData: (formData: FormDataType) => void,
     setOpenModalUploadTab: (openModalUploadTab: boolean) => void,
-}
-
-interface formDataImg {
-    img1: File;
+    // setAnswerMulipleChoice: (answerMulipleChoice: IMultipleChoice) => void,
+    // setAnswerFilling: (answerFilling: IFilling) => void,
 }
 
 const ListeningTabUpload = (props: any) => {
@@ -37,7 +35,7 @@ const ListeningTabUpload = (props: any) => {
     const [uploadedAudio3, setUploadedAudio3] = useState<string | null>(null);
     const [uploadedAudio4, setUploadedAudio4] = useState<string | null>(null);
 
-    const { formData, setFormData, openModalUploadTab, setOpenModalUploadTab, fetchTasks } = props;
+    const { formData, openModalUploadTab, questionType, answerMulipleChoice, answerFilling, setFormData, setOpenModalUploadTab, setAnswerFilling, setAnswerMulipleChoice} = props;
 
     const handleAddTask = (type: string) => {
         setCurrentTaskType(type);
@@ -185,38 +183,55 @@ const ListeningTabUpload = (props: any) => {
                             <Part1
                                 formData={formData}
                                 setFormData={setFormData}
-                                uploadedImage1={uploadedImage1}
+
+                                uploadedImage1={uploadedImage1}                                
                                 setUploadedImage1={setUploadedImage1}
+
                                 uploadedAudio1={uploadedAudio1}
                                 setUploadedAudio1={setUploadedAudio1}
+
+                                // uploadQuestion1={uploadQuestion1}
+                                // setUploadQuestion1={setUploadQuestion1}
                             />
                         )}
                         {currentTaskType === 'task2' && (
                             <Part2
                                 formData={formData}
                                 setFormData={setFormData}
+                        
                                 uploadedImage2={uploadedImage2}
                                 setUploadedImage2={setUploadedImage2}
-                                uploasedAudio2={uploadedAudio2}
+
+                                uploadedAudio2={uploadedAudio2}
                                 setUploadedAudio2={setUploadedAudio2}
+
+                                // uploadQuestion2={uploadQuestion2}
+                                // setUploadQuestion2={setUploadQuestion2}
                             />
                         )}
                         {currentTaskType === 'task3' && (
                             <Part3
                                 formData={formData}
                                 setFormData={setFormData}
+                               
                                 uploadedImage3={uploadedImage3}
                                 setUploadedImage3={setUploadedImage3}
+
                                 uploadedAudio3={uploadedAudio3}
                                 setUploadedAudio3={setUploadedAudio3}
+
+                                // uploadQuestion3={uploadQuestion3}
+                                // setUploadQuestion3={setUploadQuestion3}
                             />
                         )}
                         {currentTaskType === 'task4' && (
                             <Part4
                                 formData={formData}
                                 setFormData={setFormData}
+                                
                                 uploadedImage4={uploadedImage4}
                                 setUploadedImage4={setUploadedImage4}
+
                                 uploadedAudio4={uploadedAudio4}
                                 setUploadedAudio4={setUploadedAudio4}
                             />
@@ -228,26 +243,9 @@ const ListeningTabUpload = (props: any) => {
                 <Box sx={{ p: 2, display: 'flex', alignItems: 'center', mb: 2, flexDirection: "column" }}>
                     <TextField
                         fullWidth
-                        label="Question"
-                        name="question"
-                        value={formData.task1}
-                        onChange={(e) => setFormData({ ...formData, task1: e.target.value })}
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        fullWidth
-                        label="Answer"
-                        name="answer"
-                        value={formData.task1}
-                        onChange={(e) => setFormData({ ...formData, task1: e.target.value })}
-                        sx={{ mb: 2 }}
-                    />
-                    
-                    <TextField
-                        fullWidth
                         label="Test Duration"
                         name="testDuration"
-                        value={formData.task1}
+                        value={formData.Duration}
                         onChange={handleDurationChange}
                         sx={{ mb: 2 }}
                     />

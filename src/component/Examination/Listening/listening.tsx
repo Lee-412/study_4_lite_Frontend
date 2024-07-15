@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { ListeningTest } from '@/utils/postListening';
 import { useState } from 'react';
 import { Button, Box} from '@mui/material';
 import Table from '@mui/material/Table';
@@ -15,6 +14,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import ListeningTabUpload from './listening.upload';
 import ListeningTabEdit from './listening.edit';
+import { ListeningTest } from '@/utils/postListening';
+import { Form } from 'react-hook-form';
 
 export type FormDataType = {
 
@@ -23,7 +24,7 @@ export type FormDataType = {
   task1: string;
   img1: ImageType | null | File;
   audio1: ImageType | null | File;
-  question1: QuestionType | null; 
+  question1: QuestionType | null;
   task2: string; 
   img2: ImageType | null | File;
   audio2: ImageType | null | File;
@@ -41,6 +42,8 @@ export type FormDataType = {
   start_date: string;
   end_date: string;
 };
+
+
 
 //change task,image,audio
 
@@ -80,32 +83,40 @@ export type ImageType = {
       };
   }[];
 };
-//change task,image,audio
+// change task,image,audio
 
 export type QuestionType = {
-  id: number;
-  type: 'multiplechoice' | 'filling';
-  content: string;
-  multiplechoices: IMultipleChoice[];
-  fillings: IFilling[];
+  data: {
+    id: number;
+    attributes: {
+        type: 'multiplechoice' | 'filling';
+        content: string;
+        multiplechoices: IMultipleChoice[];
+        fillings: IFilling[];
+    };
+  }[];
 };
 
-interface IFilling {
+export type IFilling = {
+  data: { 
     id: number;
     correctAnswer: string;
   }
-interface IMultipleChoice {
+};
+export type IMultipleChoice = {
+  data: {
     id: number;
     content: string;
     isCorrect: boolean;
   }
+};
 
 export type TaskType = {
   id: number;
-  task1: string,
-  task2: string,
-  task3: string,
-  task4: string,
+  question1: QuestionType | null;
+  question2: QuestionType | null;
+  question3: QuestionType | null;
+  question4: QuestionType | null;
   img1: ImageType | null;
   img2: ImageType | null;
   img3: ImageType | null;
@@ -131,79 +142,56 @@ export type TaskType = {
   }
 };
 // change task,image, audio
-
 export const ListeningTab = () => {
+
+const lt = new ListeningTest();
+  
 const [question, setQuestion] = useState('');
 const [answer, setAnswer] = useState('');
 const [multipleChoiceQuestion, setMultipleChoiceQuestion] = useState('');
 // const [choices, setChoices] = useState<Choice[]>([{ id: 1, value: '' }]);
-const [correctChoice, setCorrectChoice] = useState('');
+// const [correctChoice, setCorrectChoice] = useState('');
 const [audioFile, setAudioFile] = useState<File | null>(null);
 const [imageFile, setImageFile] = useState<File | null>(null);
 const [testId, setTestId] = useState<number | null>(null);
 
-const [tasks, setTasks] = React.useState<TaskType[]>([]);
+const [tasks, setTasks] = React.useState<typeof FormData>();
 const [editingTask, setEditingTask] = React.useState<TaskType | null>(null);
 
 const [openModalEditTab, setOpenModalEditTab] = React.useState(false);
 const [openModalUploadTab, setOpenModalUploadTab] = React.useState(false)
-const [formData, setFormData] = React.useState<FormDataType>({
-
-  id: 0,
-  name: '',
-  task1: '',
-  img1: null,
-  audio1: null,
-  question1: null,
-  task2: '',
-  img2: null,
-  audio2: null,
-  question2: null,
-  task3: '',
-  img3: null,
-  audio3: null,
-  question3: null,
-  task4: '',
-  img4: null,
-  audio4: null,
-  question4: null,
-  duration: 0,
-  type: 'Writing',
-  start_date: '',
-  end_date: '',
-});
+const [formData, setFormData] = React.useState<FormDataType>();
 
 const [dataEdit, setDataEdit] = React.useState<TaskType>({
-  id: 0,
-  task1: '',
-  task2: '',
-  task3: '',
-  task4: '',
-  img1: null,
-  img2: null,
-  img3: null,
-  img4: null,
-  audio1: null,
-  audio2: null,
-  audio3: null,
-  audio4: null,
-  test: {
-      data: {
-          id: 0,
-          attributes: {
-              name: '',
-              Start: '',
-              End: '',
-              Duration: 0,
-              type: '',
-              createdAt: '',
-              updatedAt: '',
-              publishedAt: ''
-          }
-      }
-  }
-})
-const lt = new ListeningTest();
+    id: 0,
+    question1: null,
+    question2: null,  
+    question3: null,
+    question4: null,
+    img1: null,
+    img2: null,
+    img3: null,
+    img4: null,
+    audio1: null,
+    audio2: null,
+    audio3: null,
+    audio4: null,
+    test: {
+        data: {
+            id: 0,
+            attributes: {
+                name: '',
+                Start: '',
+                End: '',
+                Duration: 0,
+                type: '',
+                createdAt: '',
+                updatedAt: '',
+                publishedAt: ''
+            }
+        }
+    }
+  });
 
 const handleAddTask = (type: string) => {
   setOpenModalUploadTab(true);
@@ -272,13 +260,13 @@ const handleAddAudio = async () => {
     console.log(response);
   };
 
-  const handleEditTask = (task: TaskType, id: number) => {
-    console.log(task);
-    setDataEdit(task);
-    console.log(dataEdit);
-    setOpenModalEditTab(true);
+  // const handleEditTask = (task: lt, id: number) => {
+  //   console.log(task);
+  //   setDataEdit(task);
+  //   console.log(dataEdit);
+  //   setOpenModalEditTab(true);
 
-};
+
 const fetchTasks = async () => {
   try {
 
@@ -286,7 +274,7 @@ const fetchTasks = async () => {
       const dataTests = await testsRes.json();
       console.log(dataTests);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings?populate=*`, { cache: "no-store" });
+      const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-test?populate=*`, { cache: "no-store" });
       const data = await response.json();
       console.log(data);
 
@@ -304,6 +292,10 @@ const fetchTasks = async () => {
           audio2: item.attributes.audio2,
           audio3: item.attributes.audio3,
           audio4: item.attributes.audio4,
+          question1: item.attributes.question1,
+          question2: item.attributes.question2,
+          question3: item.attributes.question3,
+          question4: item.attributes.question4,
           test: item.attributes.test
       })));
       console.log(tasks);
@@ -326,7 +318,7 @@ const handleDeleteTask = async (taskId: number) => {
       console.log(taskId);
 
 
-      const taskResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${taskId}?populate=*`, {
+      const taskResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-tests/${taskId}?populate=*`, {
           headers: {
               'Content-Type': 'application/json',
           },
@@ -339,7 +331,7 @@ const handleDeleteTask = async (taskId: number) => {
       const taskData = await taskResponse.json();
       const testId = taskData.data.attributes.test.data.id;
 
-      const deleteWrtingResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${taskId}`, {
+      const deleteWrtingResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-tests/${taskId}`, {
           method: 'DELETE',
           headers: {
               'Content-Type': 'application/json',
@@ -347,7 +339,7 @@ const handleDeleteTask = async (taskId: number) => {
       });
 
       if (!deleteWrtingResponse.ok) {
-          throw new Error('Failed to delete the wrting task');
+          throw new Error('Failed to delete the listening task');
       }
 
       const deleteTestResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests/${testId}`, {
@@ -362,7 +354,7 @@ const handleDeleteTask = async (taskId: number) => {
       }
 
 
-      setTasks(tasks.filter(task => task.id !== taskId));
+      // setTasks(tasks.filter(task => task.id !== taskId));
 
       const data = await deleteTestResponse.json();
       console.log('Task and associated test deleted successfully:', data);
@@ -410,27 +402,6 @@ const handleDeleteTask = async (taskId: number) => {
                         </TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
-                {tasks.map((task, index) => (
-                            task.test.data ? (
-                                <TableRow key={task.id}>
-                                    <TableCell>{task.test.data.attributes.name}</TableCell>
-                                    <TableCell>{task.test.data.attributes.Start}</TableCell>
-                                    <TableCell>{task.test.data.attributes.End}</TableCell>
-                                    <TableCell>{task.task1}</TableCell>
-                                    <TableCell>{task.task2}</TableCell>
-                                    <TableCell>
-                                        <IconButton onClick={() => handleEditTask(task, task.id)}>
-                                            <EditIcon />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleDeleteTask(task.id)}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            ) : null
-                        ))}
-                </TableBody>
             </Table>
         </TableContainer>
         <ListeningTabUpload

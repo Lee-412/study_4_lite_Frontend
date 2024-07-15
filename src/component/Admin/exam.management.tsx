@@ -3,7 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { ReadingTab } from '../Examination/reading';
-import { ListeningTab } from '../Examination/Listening/listening';
+import {ListeningTab}  from '../Examination/Listening/listening';
 import WritingTab from '../Examination/Writing/writing';
 
 export default function ExamManagement() {

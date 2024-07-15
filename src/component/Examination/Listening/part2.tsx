@@ -74,6 +74,8 @@ const Part2 = (props: any) => {
                         multiline
                         rows={6}
                         variant="outlined"
+
+                        
                         fullWidth
                         sx={{ mb: 2 }}
                     />

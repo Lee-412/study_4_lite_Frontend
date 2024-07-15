@@ -11,8 +11,8 @@ import { FormDataType, ImageType } from './listening';
 import {submitEditDataTests, submitEditDataWriting, updateRelationtoWriting, uploadAndUpdate } from '@/utils/api';
 
 export interface ListeningDataProps {
-    formData: FormDataType,
-    setFormData: (formData: FormDataType) => void,
+    formData: any,
+    setFormData: (formData: any) => void,
     openModalEditTab: boolean,
     setOpenModalEditTab: (openModalEditTab: boolean) => void,
     dataEdit: any,
@@ -20,13 +20,8 @@ export interface ListeningDataProps {
     fetchTasks: () => void
 }
 
-interface formDataImg {
-    img1: ImageType | null;
-    img2: ImageType | null;
-}
-
 const ListeningTabEdit = (props: ListeningDataProps) => {
-    const { formData, setFormData, openModalEditTab, setOpenModalEditTab, dataEdit, setDataEdit, fetchTasks } = props;
+    const { formData, setFormData, openModalEditTab, setOpenModalEditTab, dataEdit} = props;
     const [currentTaskType, setCurrentTaskType] = useState<string | null>(null);
     const [uploadedImage1, setUploadedImage1] = useState<string | null>(null);
     const [uploadedImage2, setUploadedImage2] = useState<string | null>(null);
@@ -109,7 +104,7 @@ const ListeningTabEdit = (props: ListeningDataProps) => {
             // }
 
             setOpenModalEditTab(false);
-            fetchTasks();
+            // fetchTasks();
         } catch (error) {
             console.error('Error saving task:', error);
         }
@@ -231,26 +226,9 @@ const ListeningTabEdit = (props: ListeningDataProps) => {
                 <Box sx={{ p: 2, display: 'flex', alignItems: 'center', mb: 2, flexDirection: "column" }}>
                     <TextField
                         fullWidth
-                        label="Question"
-                        name="question"
-                        value={formData.task1}
-                        onChange={(e) => setFormData({ ...formData, task1: e.target.value })}
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        fullWidth
-                        label="Answer"
-                        name="answer"
-                        value={formData.task1}
-                        onChange={(e) => setFormData({ ...formData, task1: e.target.value })}
-                        sx={{ mb: 2 }}
-                    />
-
-                    <TextField
-                        fullWidth
                         label="Test Duration"
                         name="testDuration"
-                        value={formData.duration}
+                        value={formData.Duration}
                         onChange={handleDurationChange}
                         sx={{ mb: 2 }}
                     />
