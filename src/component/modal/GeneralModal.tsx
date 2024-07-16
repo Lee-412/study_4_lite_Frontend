@@ -36,11 +36,11 @@ const btn_style_cf = {
 
 
 
-export default function GeneralModal({open, setOpen, type, testID}:any) {
+export default function GeneralModal({open, setOpen, type, testID, userid}:any) {
   const Router = useRouter()
   
   const handleReady = () => {
-      Router.push(`/course/test/${type}-${testID}`)
+      Router.push(`/course/test/${type}-${userid}-${testID}`)
   }
   const handleClose = () => setOpen(false);
   return (

@@ -16,7 +16,7 @@ import { Test } from '@/utils/type';
 import { useRouter } from 'next/navigation';
 
 
-function TestContainer({ tests }: any) {
+function TestContainer({ tests, userid}: any) {
 
     const router = useRouter();
 
@@ -89,7 +89,7 @@ function TestContainer({ tests }: any) {
 
             <Grid container spacing={2}>
                 {filteredTests.map((test: Test) => (
-                    <TestCard key={test.id} test={test} />
+                    <TestCard key={test.id} test={test} userid={userid}/>
                 ))}
             </Grid>
         </div>

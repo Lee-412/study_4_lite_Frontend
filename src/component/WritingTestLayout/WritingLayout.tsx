@@ -9,15 +9,17 @@ import React, { useEffect, useState } from 'react'
 import { updateRelation } from '@/utils/updateRelationRequest'
 import ModalCustom from '@/component/modal/ModalCustom'
 
-function WritingLayout({writing, test, writingID}:any) {
+function WritingLayout({writing, test, writingID, userid}:any) {
+  //console.log(userid);
+  
     const [openModalSm, setOpenModalSm] = useState(false)
     const [openModalEt, setOpenModalEt] = useState(false)
     const [isDisplay1, setDisPlay1] = useState(true)
     const [isDisplay2, setDisPlay2] = useState(false)
     const initDuration = test.attributes.Duration
     const check_dur = '30'
-    const init_minute = get_minute_from_seconds(check_dur)
-    const init_sec = init_minute === 0 ? parseInt(check_dur) : parseInt(check_dur) % init_minute
+    const init_minute = get_minute_from_seconds(initDuration)
+    const init_sec = init_minute === 0 ? parseInt(initDuration) : parseInt(initDuration) % init_minute
     const [minute, setMinute] = useState(init_minute)
     const [sec, setSec] = useState(init_sec)
     const [isRunning, setRunning] = useState(true)
@@ -40,7 +42,7 @@ function WritingLayout({writing, test, writingID}:any) {
               setSec(59)
           } else if(sec <= 0 && minute <= 0){
               setRunning(false)
-              alert('Hết thời gian làm bài')
+              //alert('Hết thời gian làm bài')
               setSubmit(true)
               setOpenModalEt(true)
           } 
@@ -51,7 +53,6 @@ function WritingLayout({writing, test, writingID}:any) {
       else if(isSubmit && !openModalSm){
       } 
       if(isSubmit) {
-        alert('submitted')
         //console.log(gathering_data(writing1, writing2, wordCnt1, wordCnt2));
         const request_link = `${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/answer-wrtings`
         const writing_link = `${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${writingID}?populate=*`
@@ -59,7 +60,12 @@ function WritingLayout({writing, test, writingID}:any) {
 
         postRequest(gathering_data(writing1, writing2, wordCnt1, wordCnt2), request_link).then((item)=>{
               //console.log(item.data.id)
+              
               updateRelation(item.data.id, writing_link, 'answer_wrtings')
+              .then(()=>{
+                updateRelation(userid, request_link+`/${item.data.id}?populate=*`, 'users_permissions_user')
+              })
+              
         })
         
         return ()=> clearInterval(interval)
@@ -102,7 +108,8 @@ function WritingLayout({writing, test, writingID}:any) {
     }
 
 
-
+    console.log(userid);
+    
 
   return (
     <div className="content">
@@ -148,14 +155,14 @@ function WritingLayout({writing, test, writingID}:any) {
           <ModalCustom 
           open={openModalSm} 
           setOpen={setOpenModalSm} 
-          path={'/course'} 
+          path={`/course?userid=${userid}`} 
           canClose={true} 
           setSubmit={setSubmit}
           message={`Bạn có chắc chắn muốn nộp bài không ?`} />
           <ModalCustom 
           open={openModalEt} 
           setOpen={setOpenModalEt} 
-          path={'/course'} 
+          path={`/course?userid=${userid}`} 
           canClose={false} 
           message={'Thời gian làm bài đã hết'}
           setSubmit={setSubmit}/>

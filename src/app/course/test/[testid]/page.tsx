@@ -1,17 +1,15 @@
-import WritingArea from '@/component/InputWitingArea/WritingArea'
-import ScrollableTextArea from '@/component/ScrollableTextArea/ScrollableTextArea'
-import TimerCustom from '@/component/Timer/TimerCustom'
 import WritingLayout from '@/component/WritingTestLayout/WritingLayout'
-import { Button } from '@mui/material'
 import React, { useRef } from 'react'
 
 async function page({params}:any) {
 
+  const params_extraction = params.testid.split('-')
+  const test_id = params_extraction[params_extraction.length - 1]
+  const user_id = params_extraction[params_extraction.length - 2]
   //console.log(params);
+  console.log(user_id);
+  
   if(params.testid.includes('Wrting')){
-    const params_extraction = params.testid.split('-')
-    
-    const test_id = params_extraction[params_extraction.length - 1]
     
     const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL }/tests/${test_id}?populate=*`)
     const data = await response.json()
@@ -22,7 +20,7 @@ async function page({params}:any) {
     const test_data = data.data    
     
     return (
-      <WritingLayout writing={writing_data} test={test_data} writingID = {writing_id}/>
+      <WritingLayout writing={writing_data} test={test_data} writingID = {writing_id} userid={user_id}/>
     )
   }
   return (

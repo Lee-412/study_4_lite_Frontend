@@ -1,5 +1,11 @@
 'use server'
 
+export async function fetchData(link:string) {
+    const response = await fetch(link)
+    const data = await response.json()
+    return data
+}
+
 export async function postRequest(data:object, link: string) {
     console.log(data);
     

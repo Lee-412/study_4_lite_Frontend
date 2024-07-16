@@ -10,7 +10,7 @@ const img_url = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8Q
 
 
 
-function TestCard({test}:any) {
+function TestCard({test, userid}:any) {
 
    
     const [open, setOpen] = useState(false)
@@ -54,7 +54,7 @@ function TestCard({test}:any) {
                 </Grid>
             </Card>
         </Grid>
-        <GeneralModal open={open} setOpen={setOpen} type={test.attributes.type} testID={test.id}/>
+        <GeneralModal open={open} setOpen={setOpen} type={test.attributes.type} testID={test.id} userid={userid}/>
         </>
     );
 }
