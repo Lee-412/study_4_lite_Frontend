@@ -9,7 +9,7 @@ import Part3 from './part3';
 import Part4 from './part4';
 import { FormDataType } from './listening';
 import { ListeningTest } from '@/utils/postListening';
-
+import { submitDataTests, submitDataWrting, updateRelationtoWriting, uploadAndUpdate } from '@/utils/api';
 export interface ListeningProps {
     formData: FormDataType,
     openModalUploadTab: boolean,
@@ -34,78 +34,80 @@ const ListeningTabUpload = (props: any) => {
     const [uploadedAudio2, setUploadedAudio2] = useState<string | null>(null);
     const [uploadedAudio3, setUploadedAudio3] = useState<string | null>(null);
     const [uploadedAudio4, setUploadedAudio4] = useState<string | null>(null);
+    const [uploadQuestion1, setUploadQuestion1] = useState<string | null>(null);
 
-    const { formData, openModalUploadTab, questionType, answerMulipleChoice, answerFilling, setFormData, setOpenModalUploadTab, setAnswerFilling, setAnswerMulipleChoice} = props;
+    const { formData, openModalUploadTab, questionType, answerMulipleChoice, answerFilling, setFormData, setOpenModalUploadTab, setAnswerFilling, setAnswerMulipleChoice, fetchTasks} = props;
 
     const handleAddTask = (type: string) => {
         setCurrentTaskType(type);
     };
 
 
-    // const handleSubmit = async () => {
-    //     try {
-    //         // Kiểm tra các thông tin bắt buộc của formData
-    //         if (!formData.task1) {
-    //             alert("Vui lòng nhập nội dung Task 1.");
-    //             return;
-    //         }
-    //         if (!formData.task2) {
-    //             alert("Vui lòng nhập nội dung Task 2.");
-    //             return;
-    //         }
-    //         if (!formData.name) {
-    //             alert("Vui lòng nhập nội dung name Test.");
-    //             return;
-    //         }
-    //         if (!formData.Duration || formData.Duration != Number) {
-    //             alert("Vui lòng nhập thời gian làm bài.");
-    //             return;
-    //         }
+    const handleSubmit = async () => {
+        try {
+            // Kiểm tra các thông tin bắt buộc của formData
+            if (!formData.task1) {
+                alert("Vui lòng nhập nội dung Task 1.");
+                return;
+            }
+            if (!formData.task2) {
+                alert("Vui lòng nhập nội dung Task 2.");
+                return;
+            }
+            if (!formData.name) {
+                alert("Vui lòng nhập nội dung name Test.");
+                return;
+            }
+            if (!formData.Duration || formData.Duration != Number) {
+                alert("Vui lòng nhập thời gian làm bài.");
+                return;
+            }
 
-    //         // Submit tests data
-    //         const dataSubmitTests = await submitDataTests(formData);
-    //         if (dataSubmitTests !== 'false') {
-    //             // Fetch latest tests data
-    //             const testsResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?sort=id:desc`);
-    //             const testsData = await testsResponse.json();
-    //             const latestTestId = testsData.data[0].id;
+            // Submit tests data
+            const dataSubmitTests = await submitDataTests(formData);
+            if (dataSubmitTests !== 'false') {
+                // Fetch latest tests data
+                const testsResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?sort=id:desc`);
+                const testsData = await testsResponse.json();
+                const latestTestId = testsData.data[0].id;
 
-    //             // Submit wrting data
-    //             await submitDataWrting(formData);
-    //             const wrtingsResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings?sort=id:desc`);
-    //             const wrtingsData = await wrtingsResponse.json();
-    //             const latestWrtingId = wrtingsData.data[0].id;
-    //             // Upload and update images
-    //             await uploadAndUpdate(latestWrtingId, formData.img1, formData.img2);
+                // Submit wrting data
+                await submitDataWrting(formData);
+                const wrtingsResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings?sort=id:desc`);
+                const wrtingsData = await wrtingsResponse.json();
+                const latestWrtingId = wrtingsData.data[0].id;
+                // Upload and update images
+                await uploadAndUpdate(latestWrtingId, formData.img1, formData.img2);
 
-    //             // Update relation to wrting
-    //             const checkUpdate = await updateRelationtoWriting(latestTestId, latestWrtingId);
+                // Update relation to wrting
+                const checkUpdate = await updateRelationtoWriting(latestTestId, latestWrtingId);
 
-    //             if (checkUpdate) {
-    //                 // Clear form data and reset images
-    //                 setFormData({
-    //                     name: "",
-    //                     task1: "",
-    //                     img1: null,
-    //                     img2: null,
-    //                     task2: '',
-    //                     Duration: 0,
-    //                     type: "Wrting",
-    //                     start_date: '',
-    //                     end_date: '',
-    //                 });
-    //                 setUploadedImage1(null);
-    //                 setUploadedImage2(null);
+                if (checkUpdate) {
+                    // Clear form data and reset images
+                    setFormData({
+                        name: "",
+                        task1: "",
+                        img1: null,
+                        img2: null,
+                        task2: '',
+                        Duration: 0,
+                        type: "Wrting",
+                        start_date: '',
+                        end_date: '',
+                    });
+                    setUploadedImage1(null);
+                    setUploadedImage2(null);
 
-    //                 // Fetch updated tasks list
-    //                 fetchTasks();
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.error('Error handling submit:', error);
+                    // Fetch updated tasks list
+                    fetchTasks();
+                }
+            }
+        } catch (error) {
+            console.error('Error handling submit:', error);
 
-    //     }
-    // };
+        }
+    };
+    //need to fix this submit
 
     const handleClose = () => {
         setOpenModalUploadTab(false);
@@ -141,6 +143,7 @@ const ListeningTabUpload = (props: any) => {
             name: event.target.value
         });
     }
+    
     return (
         <Modal
             open={openModalUploadTab}
@@ -175,6 +178,55 @@ const ListeningTabUpload = (props: any) => {
                     <Button variant="outlined" onClick={() => handleAddTask('task4')} disabled={currentTaskType === 'task4'}>
                         Task 4
                     </Button>
+                </Box>
+                <Box sx={{ p: 2, display: 'flex', alignItems: 'center', mb: 2, flexDirection: "column" }}>
+                    <TextField
+                        fullWidth
+                        label="Test Duration"
+                        name="testDuration"
+                        value={formData.Duration}
+                        onChange={handleDurationChange}
+                        sx={{ mb: 2 }}
+                    />
+
+                    <TextField
+                        fullWidth
+                        label="Start"
+                        type="datetime-local"
+                        name="start"
+                        value={formData.start_date}
+                        onChange={handleTimeChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        inputProps={{
+                            step: 300, // 5 minutes
+                        }}
+                        sx={{ mb: 2 }}
+                    />
+                    <TextField
+                        fullWidth
+                        label="End"
+                        type="datetime-local"
+                        name="end"
+                        value={formData.end_date}
+                        onChange={handleTimeEndChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        inputProps={{
+                            step: 300, // 5 minutes
+                        }}
+                        sx={{ mb: 2 }}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        sx={{ mb: 2 }}
+                    />
                 </Box>
 
                 {currentTaskType && (
@@ -239,61 +291,6 @@ const ListeningTabUpload = (props: any) => {
 
                     </Box>
                 )}
-
-                <Box sx={{ p: 2, display: 'flex', alignItems: 'center', mb: 2, flexDirection: "column" }}>
-                    <TextField
-                        fullWidth
-                        label="Test Duration"
-                        name="testDuration"
-                        value={formData.Duration}
-                        onChange={handleDurationChange}
-                        sx={{ mb: 2 }}
-                    />
-
-                    <TextField
-                        fullWidth
-                        label="Start"
-                        type="datetime-local"
-                        name="start"
-                        value={formData.start_date}
-                        onChange={handleTimeChange}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        inputProps={{
-                            step: 300, // 5 minutes
-                        }}
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        fullWidth
-                        label="End"
-                        type="datetime-local"
-                        name="end"
-                        value={formData.end_date}
-                        onChange={handleTimeEndChange}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        inputProps={{
-                            step: 300, // 5 minutes
-                        }}
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        fullWidth
-                        label="Name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        sx={{ mb: 2 }}
-                    />
-                </Box>
-                <Box sx={{ mt: 2 }}>
-                    <Button variant="outlined" onClick={lt.submitForm}>
-                        Submit
-                    </Button>
-                </Box>
             </Box>
         </Modal>
     );

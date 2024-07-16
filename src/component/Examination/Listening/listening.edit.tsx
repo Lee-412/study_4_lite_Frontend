@@ -11,7 +11,7 @@ import { FormDataType, ImageType } from './listening';
 import {submitEditDataTests, submitEditDataWriting, updateRelationtoWriting, uploadAndUpdate } from '@/utils/api';
 
 export interface ListeningDataProps {
-    formData: any,
+    formData:  any,
     setFormData: (formData: any) => void,
     openModalEditTab: boolean,
     setOpenModalEditTab: (openModalEditTab: boolean) => void,
@@ -21,7 +21,7 @@ export interface ListeningDataProps {
 }
 
 const ListeningTabEdit = (props: ListeningDataProps) => {
-    const { formData, setFormData, openModalEditTab, setOpenModalEditTab, dataEdit} = props;
+    const { formData, setFormData, openModalEditTab, setOpenModalEditTab, dataEdit, fetchTasks} = props;
     const [currentTaskType, setCurrentTaskType] = useState<string | null>(null);
     const [uploadedImage1, setUploadedImage1] = useState<string | null>(null);
     const [uploadedImage2, setUploadedImage2] = useState<string | null>(null);
@@ -104,7 +104,7 @@ const ListeningTabEdit = (props: ListeningDataProps) => {
             // }
 
             setOpenModalEditTab(false);
-            // fetchTasks();
+            fetchTasks();
         } catch (error) {
             console.error('Error saving task:', error);
         }

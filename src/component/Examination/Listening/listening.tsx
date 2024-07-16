@@ -16,6 +16,7 @@ import ListeningTabUpload from './listening.upload';
 import ListeningTabEdit from './listening.edit';
 import { ListeningTest } from '@/utils/postListening';
 import { Form } from 'react-hook-form';
+import test from 'node:test';
 
 export type FormDataType = {
 
@@ -24,19 +25,19 @@ export type FormDataType = {
   task1: string;
   img1: ImageType | null | File;
   audio1: ImageType | null | File;
-  question1: QuestionType | null;
+  // question1: QuestionType | null;
   task2: string; 
   img2: ImageType | null | File;
   audio2: ImageType | null | File;
-  question2: QuestionType | null;
+  // question2: QuestionType | null;
   task3: string;
   img3: ImageType | null | File;
   audio3: ImageType | null | File;
-  question3: QuestionType | null;
+  // question3: QuestionType | null;
   task4: string;
   img4: ImageType | null | File;
   audio4: ImageType | null | File;
-  question4: QuestionType | null;
+  // question4: QuestionType | null;
   duration: number;
   type: string;
   start_date: string;
@@ -85,38 +86,38 @@ export type ImageType = {
 };
 // change task,image,audio
 
-export type QuestionType = {
-  data: {
-    id: number;
-    attributes: {
-        type: 'multiplechoice' | 'filling';
-        content: string;
-        multiplechoices: IMultipleChoice[];
-        fillings: IFilling[];
-    };
-  }[];
-};
+// export type QuestionType = {
+//   data: {
+//     id: number;
+//     attributes: {
+//         type: 'multiplechoice' | 'filling';
+//         content: string;
+//         multiplechoices: IMultipleChoice[];
+//         fillings: IFilling[];
+//     };
+//   }[];
+// };
 
-export type IFilling = {
-  data: { 
-    id: number;
-    correctAnswer: string;
-  }
-};
-export type IMultipleChoice = {
-  data: {
-    id: number;
-    content: string;
-    isCorrect: boolean;
-  }
-};
+// export type IFilling = {
+//   data: { 
+//     id: number;
+//     correctAnswer: string;
+//   }
+// };
+// export type IMultipleChoice = {
+//   data: {
+//     id: number;
+//     content: string;
+//     isCorrect: boolean;
+//   }
+// };
 
 export type TaskType = {
   id: number;
-  question1: QuestionType | null;
-  question2: QuestionType | null;
-  question3: QuestionType | null;
-  question4: QuestionType | null;
+  // question1: QuestionType | null;
+  // question2: QuestionType | null;
+  // question3: QuestionType | null;
+  // question4: QuestionType | null;
   img1: ImageType | null;
   img2: ImageType | null;
   img3: ImageType | null;
@@ -155,19 +156,44 @@ const [audioFile, setAudioFile] = useState<File | null>(null);
 const [imageFile, setImageFile] = useState<File | null>(null);
 const [testId, setTestId] = useState<number | null>(null);
 
-const [tasks, setTasks] = React.useState<typeof FormData>();
+const [tasks, setTasks] = React.useState<TaskType>();
 const [editingTask, setEditingTask] = React.useState<TaskType | null>(null);
 
 const [openModalEditTab, setOpenModalEditTab] = React.useState(false);
 const [openModalUploadTab, setOpenModalUploadTab] = React.useState(false)
-const [formData, setFormData] = React.useState<FormDataType>();
+const [formData, setFormData] = React.useState<FormDataType>(
+  {
+    id: 0,
+    name: '',
+    task1: '',
+    img1: null,
+    audio1: null,
+    // question1: null,
+    task2: '',
+    img2: null,
+    audio2: null,
+    // question2: null,
+    task3: '',
+    img3: null,
+    audio3: null,
+    // question3: null,
+    task4: '',
+    img4: null,
+    audio4: null,
+    // question4: null,
+    duration: 0,
+    type: '',
+    start_date: '',
+    end_date: '',
+  }
+);
 
 const [dataEdit, setDataEdit] = React.useState<TaskType>({
     id: 0,
-    question1: null,
-    question2: null,  
-    question3: null,
-    question4: null,
+    // question1: null,
+    // question2: null,  
+    // question3: null,
+    // question4: null,
     img1: null,
     img2: null,
     img3: null,
@@ -197,68 +223,6 @@ const handleAddTask = (type: string) => {
   setOpenModalUploadTab(true);
 }
 
-const handleAddAudio = async () => {
-    if (audioFile) {
-      await lt.addAudio(audioFile);
-    }
-  };
-
-  const handleAddImage = async () => {
-    if (imageFile) {
-      await lt.addImage(imageFile);
-    }
-  };
-
-  const handleAddQuestion = () => {
-    lt.addQuestion(question);
-  };
-
-  const handleAddFilling = () => {
-    lt.addFilling(question, answer);
-  };
-
-  // const handleAddMultipleChoice = () => {
-  //   const choicesObject: { [key: string]: string } = choices.reduce((acc, choice) => {
-  //     acc[`choice${choice.id}`] = choice.value;
-  //     return acc;
-  //   }, {} as { [key: string]: string });
-  //   lt.addMultiplechoice(multipleChoiceQuestion, correctChoice, choicesObject);
-  // };
-
-  const handleRemoveQuestion = () => {
-    lt.removeQuestion(question);
-  };
-
-  const handleRemoveFilling = () => {
-    lt.removeFilling(question);
-  };
-
-  const handleRemoveMultipleChoice = () => {
-    lt.removeMultipleChoice(multipleChoiceQuestion);
-  };
-
-  // const handleAddChoice = () => {
-  //   setChoices([...choices, { id: choices.length + 1, value: '' }]);
-  // };
-
-  // const handleRemoveChoice = (id: number) => {
-  //   setChoices(choices.filter(choice => choice.id !== id));
-  // };
-
-  // const handleChoiceChange = (id: number, value: string) => {
-  //   setChoices(choices.map(choice => (choice.id === id ? { ...choice, value } : choice)));
-  // };
-
-  const handleAddRelationTest = async () => {
-    if (testId) {
-      await lt.addRelationTest(testId);
-    }
-  };
-
-  const handleSubmitForm = async () => {
-    const response = await lt.submitForm();
-    console.log(response);
-  };
 
   // const handleEditTask = (task: lt, id: number) => {
   //   console.log(task);
@@ -298,7 +262,7 @@ const fetchTasks = async () => {
           question4: item.attributes.question4,
           test: item.attributes.test
       })));
-      console.log(tasks);
+      console.log(testsRes);
 
 
   } catch (error) {
@@ -423,118 +387,3 @@ const handleDeleteTask = async (taskId: number) => {
       </Box>  
     );
 };
-
-
-    // <Container>
-    //   <Typography variant="h4" component="h1" gutterBottom>Edit Test</Typography>
-    //     <Box>
-    //         <h1> Task 1</h1>
-    //         <Box sx={{ mb: 2 }}>
-    //             <Button variant="contained" component="label">
-    //             Upload Audio
-    //             <input type="file" hidden onChange={(e) => setAudioFile(e.target.files?.[0] || null)} />
-    //             </Button>
-    //             <Button variant="contained" color="primary" onClick={handleAddAudio}>Add Audio</Button>
-    //         </Box>
-    //         <Box sx={{ mb: 2 }}>
-    //             <Button variant="contained" component="label">
-    //             Upload Image
-    //             <input type="file" hidden onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
-    //             </Button>
-    //             <Button variant="contained" color="primary" onClick={handleAddImage}>Add Image</Button>
-    //         </Box>
-    //         <Box sx={{ mb: 2 }}>
-    //             <TextField label="Question" fullWidth value={question} onChange={(e) => setQuestion(e.target.value)} />
-    //             <Button variant="contained" color="primary" onClick={handleAddQuestion}>Add Question</Button>
-    //             <Button variant="outlined" color="error" onClick={handleRemoveQuestion}>Remove Question</Button>
-    //         </Box>
-    //         <Box sx={{ mb: 2 }}>
-    //             <TextField label="Filling Question" fullWidth value={question} onChange={(e) => setQuestion(e.target.value)} />
-    //             <TextField label="Answer" fullWidth value={answer} onChange={(e) => setAnswer(e.target.value)} />
-    //             <Button variant="contained" color="primary" onClick={handleAddFilling}>Add Filling</Button>
-    //             <Button variant="outlined" color="error" onClick={handleRemoveFilling}>Remove Filling</Button>
-    //         </Box>
-    //         <Box sx={{ mb: 2 }}>
-    //             <TextField label="Multiple Choice Question" fullWidth value={multipleChoiceQuestion} onChange={(e) => setMultipleChoiceQuestion(e.target.value)} />
-    //             {choices.map((choice, index) => (
-    //             <Box key={choice.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-    //                 <TextField
-    //                 label={`Choice ${choice.id}`}
-    //                 fullWidth
-    //                 value={choice.value}
-    //                 onChange={(e) => handleChoiceChange(choice.id, e.target.value)}
-    //                 />
-    //                 <IconButton color="error" onClick={() => handleRemoveChoice(choice.id)}>
-    //                 <RemoveIcon />
-    //                 </IconButton>
-    //             </Box>
-    //             ))}
-    //             <Button variant="contained" color="secondary" onClick={handleAddChoice}>
-    //             <AddIcon /> Add Choice
-    //             </Button>
-    //             <TextField label="Correct Choice" fullWidth value={correctChoice} onChange={(e) => setCorrectChoice(e.target.value)} />
-    //             <Button variant="contained" color="primary" onClick={handleAddMultipleChoice}>Add Multiple Choice</Button>
-    //             <Button variant="outlined" color="error" onClick={handleRemoveMultipleChoice}>Remove Multiple Choice</Button>
-    //         </Box>
-    //         <Box sx={{ mb: 2 }}>
-    //             <TextField label="Test ID" fullWidth type="number" value={testId ?? ''} onChange={(e) => setTestId(Number(e.target.value))} />
-    //             <Button variant="contained" color="primary" onClick={handleAddRelationTest}>Add Relation Test</Button>
-    //         </Box>
-    //         <Button variant="contained" color="secondary" onClick={handleSubmitForm}>Submit Form</Button>
-    //     </Box>
-    //     <Box>
-    //         <h1> Task 2</h1>
-    //         <Box sx={{ mb: 2 }}>
-    //             <Button variant="contained" component="label">
-    //             Upload Audio
-    //             <input type="file" hidden onChange={(e) => setAudioFile(e.target.files?.[0] || null)} />
-    //             </Button>
-    //             <Button variant="contained" color="primary" onClick={handleAddAudio}>Add Audio</Button>
-    //         </Box>
-    //         <Box sx={{ mb: 2 }}>
-    //             <Button variant="contained" component="label">
-    //             Upload Image
-    //             <input type="file" hidden onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
-    //             </Button>
-    //             <Button variant="contained" color="primary" onClick={handleAddImage}>Add Image</Button>
-    //         </Box>
-    //         <Box sx={{ mb: 2 }}>
-    //             <TextField label="Question" fullWidth value={question} onChange={(e) => setQuestion(e.target.value)} />
-    //             <Button variant="contained" color="primary" onClick={handleAddQuestion}>Add Question</Button>
-    //             <Button variant="outlined" color="error" onClick={handleRemoveQuestion}>Remove Question</Button>
-    //         </Box>
-    //         <Box sx={{ mb: 2 }}>
-    //             <TextField label="Filling Question" fullWidth value={question} onChange={(e) => setQuestion(e.target.value)} />
-    //             <TextField label="Answer" fullWidth value={answer} onChange={(e) => setAnswer(e.target.value)} />
-    //             <Button variant="contained" color="primary" onClick={handleAddFilling}>Add Filling</Button>
-    //             <Button variant="outlined" color="error" onClick={handleRemoveFilling}>Remove Filling</Button>
-    //         </Box>
-    //         <Box sx={{ mb: 2 }}>
-    //             <TextField label="Multiple Choice Question" fullWidth value={multipleChoiceQuestion} onChange={(e) => setMultipleChoiceQuestion(e.target.value)} />
-    //             {choices.map((choice, index) => (
-    //             <Box key={choice.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-    //                 <TextField
-    //                 label={`Choice ${choice.id}`}
-    //                 fullWidth
-    //                 value={choice.value}
-    //                 onChange={(e) => handleChoiceChange(choice.id, e.target.value)}
-    //                 />
-    //                 <IconButton color="error" onClick={() => handleRemoveChoice(choice.id)}>
-    //                 <RemoveIcon />
-    //                 </IconButton>
-    //             </Box>
-    //             ))}
-    //             <Button variant="contained" color="secondary" onClick={handleAddChoice}>
-    //             <AddIcon /> Add Choice
-    //             </Button>
-    //             <TextField label="Correct Choice" fullWidth value={correctChoice} onChange={(e) => setCorrectChoice(e.target.value)} />
-    //             <Button variant="contained" color="primary" onClick={handleAddMultipleChoice}>Add Multiple Choice</Button>
-    //             <Button variant="outlined" color="error" onClick={handleRemoveMultipleChoice}>Remove Multiple Choice</Button>
-    //         </Box>
-    //         <Box sx={{ mb: 2 }}>
-    //             <TextField label="Test ID" fullWidth type="number" value={testId ?? ''} onChange={(e) => setTestId(Number(e.target.value))} />
-    //             <Button variant="contained" color="primary" onClick={handleAddRelationTest}>Add Relation Test</Button>
-    //         </Box>
-    //         <Button variant="contained" color="secondary" onClick={handleSubmitForm}>Submit Form</Button>
-    //     </Box>
-    // </Container>
