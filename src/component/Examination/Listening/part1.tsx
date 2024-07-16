@@ -12,9 +12,14 @@ import { useEffect, useState } from 'react';
 import { ListeningTest } from '@/utils/postListening';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+const lt = new ListeningTest();
+
 const Part1 = (props: any) => {
     const { formData, setFormData, uploadedImage1, setUploadedImage1, uploadedAudio1, setUploadedAudio1 } = props;
-    const [questions1, setQuestions] = useState<{ type: string, content: string, answer: string, choices?: { [key: string]: string } }[]>([]);
+    const [questions1, setQuestions] = useState<{ type: string, content: string, answer: string, choices?: { [key: string]: string } }[]>(formData?.question1|| []);
+    const [audio1, setAudio1] = useState();
+    const [image1, setImage1] = useState();
+    console.log(formData)
 
     useEffect(() => {
         if (formData.img1 && formData.img1.data && formData.img1.data.length > 0) {
@@ -58,7 +63,7 @@ const Part1 = (props: any) => {
 
     const addQuestion = () => {
         setQuestions([...questions1, { type: 'filling', content: '', answer: '', choices: {} }]);
-        setFormData({ ...formData, questions1: questions1 });
+        setFormData({ ...formData, question1: questions1 });
     };
 
     const handleQuestionChange = (index: number, field: string, value: string) => {
@@ -66,7 +71,7 @@ const Part1 = (props: any) => {
             qIndex === index ? { ...question, [field]: value } : question
         );
         setQuestions(newQuestions);
-        setFormData({ ...formData, questions: newQuestions });
+        setFormData({ ...formData, question1: newQuestions });
     };
 
     const handleChoiceChange = (index: number, choice: string, value: string) => {
@@ -74,7 +79,7 @@ const Part1 = (props: any) => {
             qIndex === index ? { ...question, choices: { ...question.choices, [choice]: value } } : question
         );
         setQuestions(newQuestions);
-        setFormData({ ...formData, questions: newQuestions });
+        setFormData({ ...formData, question1: newQuestions });
     };
 
     const renderChoices = (questionIndex: number) => (
@@ -97,10 +102,16 @@ const Part1 = (props: any) => {
         setQuestions(newQuestions);
         setFormData({ ...formData, questions1: newQuestions });
     };
+    
 
-    const lt = new ListeningTest();
-
+    const handleAddAudio = (audio: any ) => {
+         lt.addAudio(audio)
+    }
+    const handleAddImage = (image: any) => {
+         lt.addImage(image)
+    }
     const handleSubmit = async () => {
+        console.log(lt)
         for (const question of questions1) {
             if (question.type === 'filling') {
                 lt.addFilling(question.content, question.answer);
@@ -115,22 +126,6 @@ const Part1 = (props: any) => {
         <>
             <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                 <Box sx={{ width: 'calc(50% - 16px)' }}>
-                    <label htmlFor="upload-photo1">
-                        <input
-                            style={{ display: 'none' }}
-                            id="upload-photo1"
-                            name="upload-photo1"
-                            type="file"
-                            onChange={handleFileChange1}
-                        />
-                        <IconButton color="primary" aria-label="upload picture" component="span">
-                            <PhotoCameraIcon />
-                        </IconButton>
-                    </label>
-                    <span style={{ marginLeft: '8px', color: 'rgba(0, 0, 0, 0.54)' }}>
-                        Upload image
-                    </span>
-                    <br />
                     <label htmlFor="upload-audio1">
                         <input
                             style={{ display: 'none' }}
@@ -138,14 +133,36 @@ const Part1 = (props: any) => {
                             name="upload-audio1"
                             type="file"
                             accept="audio/*"
-                            onChange={handleAudioChange1}
+                            onChange={(e) => {
+                              if (e.target.files !== null) handleAddAudio(e.target.files[0])
+                                handleAudioChange1(e) 
+                            }}
                         />
                         <IconButton color="primary" aria-label="upload audio" component="span">
                             <AudiotrackIcon />
                         </IconButton>
+                        <span style={{ marginLeft: '8px', color: 'rgba(0, 0, 0, 0.54)' }}>
+                            Upload audio
+                        </span>
+                    </label>
+                    <br/>
+                    <label htmlFor="upload-photo1">
+                        <input
+                            style={{ display: 'none' }}
+                            id="upload-photo1"
+                            name="upload-photo1"
+                            type="file"
+                            onChange={(e) => {
+                              if (e.target.files !== null) handleAddImage(e.target.files[0])
+                                handleFileChange1(e)
+                            }}
+                        />
+                        <IconButton color="primary" aria-label="upload picture" component="span">
+                            <PhotoCameraIcon />
+                        </IconButton>
                     </label>
                     <span style={{ marginLeft: '8px', color: 'rgba(0, 0, 0, 0.54)' }}>
-                        Upload audio
+                        Upload image
                     </span>
                 </Box>
                 <Box sx={{
@@ -178,7 +195,9 @@ const Part1 = (props: any) => {
                     flexDirection: 'column',
                 }}
             >
-                {questions1.map((question, index) => (
+                {
+                questions1.map((question, index) =>{
+                 return  (
                     <Box key={index} sx={{ mb: 2, width: '100%', position: 'relative' }}>
                       <TextField
                             fullWidth
@@ -213,7 +232,8 @@ const Part1 = (props: any) => {
                             sx={{ mb: 2 }}
                         />
                     </Box>
-                ))}
+                )
+                } )}
                 <Button variant="contained" onClick={addQuestion} sx={{ mb: 2 }}>
                     Add Question
                 </Button>

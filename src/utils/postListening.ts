@@ -91,14 +91,14 @@ export class ListeningTest {
     }
 
     async submitForm() {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-tests?populate[listening][populate]=*`, { 
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-tests?populate=*`, { 
             method: "POST", 
             body: JSON.stringify({data :this.form}), 
             headers: { 
                 "Content-type": "application/json"
             }});
             const dt = await response.json();
-            console.log(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-tests?populate[listening][populate]=*`,)
+            console.log(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-tests?populate=*`,)
             return dt
     }
 

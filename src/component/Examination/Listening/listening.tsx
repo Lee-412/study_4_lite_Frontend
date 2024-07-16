@@ -25,19 +25,19 @@ export type FormDataType = {
   task1: string;
   img1: ImageType | null | File;
   audio1: ImageType | null | File;
-  // question1: QuestionType | null;
+  question1: QuestionType[] | null;
   task2: string; 
   img2: ImageType | null | File;
   audio2: ImageType | null | File;
-  // question2: QuestionType | null;
+  question2: QuestionType[] | null;
   task3: string;
   img3: ImageType | null | File;
   audio3: ImageType | null | File;
-  // question3: QuestionType | null;
+  question3: QuestionType[] | null;
   task4: string;
   img4: ImageType | null | File;
   audio4: ImageType | null | File;
-  // question4: QuestionType | null;
+  question4: QuestionType[] | null;
   duration: number;
   type: string;
   start_date: string;
@@ -86,38 +86,32 @@ export type ImageType = {
 };
 // change task,image,audio
 
-// export type QuestionType = {
-//   data: {
-//     id: number;
-//     attributes: {
-//         type: 'multiplechoice' | 'filling';
-//         content: string;
-//         multiplechoices: IMultipleChoice[];
-//         fillings: IFilling[];
-//     };
-//   }[];
-// };
+export type QuestionType = {
+    id: number;
+    attributes: {
+        type: 'multiplechoice' | 'filling';
+        content: string;
+        multiplechoices: IMultipleChoice[];
+        fillings: IFilling[];
+    }
+};
 
-// export type IFilling = {
-//   data: { 
-//     id: number;
-//     correctAnswer: string;
-//   }
-// };
-// export type IMultipleChoice = {
-//   data: {
-//     id: number;
-//     content: string;
-//     isCorrect: boolean;
-//   }
-// };
+export type IFilling = {
+    id: number;
+    correctAnswer: string;
+};
+export type IMultipleChoice = {
+    id: number;
+    content: string;
+    isCorrect: boolean;
+};
 
 export type TaskType = {
   id: number;
-  // question1: QuestionType | null;
-  // question2: QuestionType | null;
-  // question3: QuestionType | null;
-  // question4: QuestionType | null;
+  question1: QuestionType | null;
+  question2: QuestionType | null;
+  question3: QuestionType | null;
+  question4: QuestionType | null;
   img1: ImageType | null;
   img2: ImageType | null;
   img3: ImageType | null;
@@ -168,19 +162,19 @@ const [formData, setFormData] = React.useState<FormDataType>(
     task1: '',
     img1: null,
     audio1: null,
-    // question1: null,
+    question1: null,
     task2: '',
     img2: null,
     audio2: null,
-    // question2: null,
+    question2: null,
     task3: '',
     img3: null,
     audio3: null,
-    // question3: null,
+    question3: null,
     task4: '',
     img4: null,
     audio4: null,
-    // question4: null,
+    question4: null,
     duration: 0,
     type: '',
     start_date: '',
@@ -190,10 +184,10 @@ const [formData, setFormData] = React.useState<FormDataType>(
 
 const [dataEdit, setDataEdit] = React.useState<TaskType>({
     id: 0,
-    // question1: null,
-    // question2: null,  
-    // question3: null,
-    // question4: null,
+    question1: null,
+    question2: null,  
+    question3: null,
+    question4: null,
     img1: null,
     img2: null,
     img3: null,

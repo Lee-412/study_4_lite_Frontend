@@ -15,7 +15,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const Part2 = (props: any) => {
     const { formData, setFormData, uploadedImage2, setUploadedImage2, uploadedAudio2, setUploadedAudio2 } = props;
     const [questions, setQuestions] = useState<{ type: string, content: string, answer: string, choices?: { [key: string]: string } }[]>([]);
-
     useEffect(() => {
         if (formData.img2 && formData.img2.data && formData.img2.data.length > 0) {
             const imageUrl = formData.img2.data[0].attributes.formats ?
@@ -27,7 +26,7 @@ const Part2 = (props: any) => {
 
     useEffect(() => {
         if (formData.audio2 && formData.audio2.data && formData.audio2.data.length > 0) {
-            const audioUrl = formData.audio1.data[0].attributes.url;
+            const audioUrl = formData.audio2.data[0].attributes.url;
             setUploadedAudio2(`${process.env.NEXT_PUBLIC_STRAPI_LINK_URL}${audioUrl} `);
         }
     }, [formData, setUploadedAudio2]);
