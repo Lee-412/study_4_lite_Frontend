@@ -1,272 +1,365 @@
+
 import React from 'react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
-import { Box, Button, TextField, Typography, Container, Grid, FormControlLabel, Checkbox, Select, MenuItem } from '@mui/material';
+import { Box, Button, TextField, Typography, Container, Select, MenuItem, FormControlLabel, Checkbox, Grid } from '@mui/material';
+import { readingTest } from '@/utils/postReading';
+import { createTest } from '@/utils/api';
 
-interface IMultipleChoice {
-  id: number;
-  content: string;
-  isCorrect: boolean;
-  question: IQuestion;
-}
-
-interface IFilling {
-  id: number;
-  correctAnswer: string;
-  question: IQuestion;
-}
-
-interface IQuestion {
-  id: number;
-  type: string;
-  content: string;
-  passage: IPassage;
-  multiplechoices: IMultipleChoice[];
-  fillings: IFilling[];
-}
-
-interface IPassage {
-  id: number;
-  order: number;
-  content: string;
-  img: string;
-  test: ITest;
-  questions: IQuestion[];
-}
-
-interface ITest {
-  id: number;
+export type FormDataReading = {
   name: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   duration: number;
   type: string;
-  passages: IPassage[];
-}
+  passages: {
+    content: string;
+    imgFile: File | null; // Updated type for imgFile to File | null
+    questionair: string;
+    questions: {
+      type: string;
+      content: string;
+      choices?: { content: string; isCorrect: boolean }[];
+      fillings?: string[];
+    }[];
+  }[];
+};
 
 export const ReadingTab: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const { control, handleSubmit, watch } = useForm<ITest>({
+  const { control, handleSubmit, watch, setValue } = useForm<FormDataReading>({
     defaultValues: {
-      id: 0,
       name: '',
-      start: new Date(),
-      end: new Date(),
+      start: new Date().toISOString().split('T')[0],
+      end: new Date().toISOString().split('T')[0],
       duration: 0,
       type: 'Reading',
       passages: Array(3).fill({
-        id: Math.random(),
-        order: 0,
         content: '',
-        img: '',
-        questions: [],
-      }).map((passage, index) => ({
-        ...passage,
-        order: index + 1,
-      })),
-    },
+        imgFile: null, // Initialize imgFile to null
+        questionair: '',
+        questions: []
+      })
+    }
   });
 
-  const { fields: passagesFields, append: appendPassage, remove: removePassage } = useFieldArray({
+  const { fields: passagesFields } = useFieldArray({
     control,
     name: 'passages'
   });
 
   const addQuestion = (passageIndex: number) => {
-    const passage = watch(`passages.${passageIndex}`);
-    passage.questions.push({
-      id: Math.random(),
-      type: '',
-      content: '',
-      multiplechoices: [],
-      fillings: []
-    });
+    const updatedPassages = [...watch('passages')];
+    updatedPassages[passageIndex].questions.push({ type: 'multiplechoice', content: '', choices: [], fillings: [] });
+    setValue('passages', updatedPassages);
   };
 
   const removeQuestion = (passageIndex: number, questionIndex: number) => {
-    const passage = watch(`passages.${passageIndex}`);
-    passage.questions.splice(questionIndex, 1);
+    const updatedPassages = [...watch('passages')];
+    updatedPassages[passageIndex].questions.splice(questionIndex, 1);
+    setValue('passages', updatedPassages);
   };
 
-  const addMultipleChoice = (passageIndex: number, questionIndex: number) => {
-    const question = watch(`passages.${passageIndex}.questions.${questionIndex}`);
-    question.multiplechoices.push({
-      id: Math.random(),
-      content: '',
-      isCorrect: false
-    });
+  const addMultipleChoiceOption = (passageIndex: number, questionIndex: number) => {
+    const updatedPassages = [...watch('passages')];
+    updatedPassages[passageIndex].questions[questionIndex].choices?.push({ content: '', isCorrect: false });
+    setValue('passages', updatedPassages);
   };
 
-  const removeMultipleChoice = (passageIndex: number, questionIndex: number, choiceIndex: number) => {
-    const question = watch(`passages.${passageIndex}.questions.${questionIndex}`);
-    question.multiplechoices.splice(choiceIndex, 1);
+  const removeMultipleChoiceOption = (passageIndex: number, questionIndex: number, choiceIndex: number) => {
+    const updatedPassages = [...watch('passages')];
+    updatedPassages[passageIndex].questions[questionIndex].choices?.splice(choiceIndex, 1);
+    setValue('passages', updatedPassages);
   };
 
   const addFilling = (passageIndex: number, questionIndex: number) => {
-    const question = watch(`passages.${passageIndex}.questions.${questionIndex}`);
-    question.fillings.push({
-      id: Math.random(),
-      correctAnswer: ''
-    });
+    const updatedPassages = [...watch('passages')];
+    updatedPassages[passageIndex].questions[questionIndex].fillings?.push('');
+    setValue('passages', updatedPassages);
   };
 
   const removeFilling = (passageIndex: number, questionIndex: number, fillingIndex: number) => {
-    const question = watch(`passages.${passageIndex}.questions.${questionIndex}`);
-    question.fillings.splice(fillingIndex, 1);
+    const updatedPassages = [...watch('passages')];
+    updatedPassages[passageIndex].questions[questionIndex].fillings?.splice(fillingIndex, 1);
+    setValue('passages', updatedPassages);
   };
 
-  const renderQuestionFields = (question: IQuestion, passageIndex: number, questionIndex: number) => {
-    switch (question.type) {
-      case 'multiplechoice':
-        return (
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1">Multiple Choice Options</Typography>
-            </Grid>
-            {question.multiplechoices.map((choice, choiceIndex) => (
-              <Grid item xs={12} key={choice.id}>
-                <Controller
-                  name={`passages.${passageIndex}.questions.${questionIndex}.multiplechoices.${choiceIndex}.content`}
-                  control={control}
-                  render={({ field }) => (
-                    <TextField {...field} label={`Choice Content ${choiceIndex + 1}`} variant="outlined" fullWidth />
-                  )}
-                />
-                <Controller
-                  name={`passages.${passageIndex}.questions.${questionIndex}.multiplechoices.${choiceIndex}.isCorrect`}
-                  control={control}
-                  render={({ field }) => (
-                    <FormControlLabel
-                      control={<Checkbox {...field} checked={field.value} />}
-                      label="Is Correct"
-                    />
-                  )}
-                />
-                <Button onClick={() => removeMultipleChoice(passageIndex, questionIndex, choiceIndex)} variant="contained" color="secondary">
-                  Remove Multiple Choice Option
-                </Button>
-              </Grid>
-            ))}
-            <Grid item xs={12}>
-              <Button onClick={() => addMultipleChoice(passageIndex, questionIndex)} variant="contained">
-                Add Multiple Choice Option
-              </Button>
-            </Grid>
-          </Grid>
-        );
-      case 'filling':
-        return (
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1">Filling Answers</Typography>
-            </Grid>
-            {question.fillings.map((filling, fillingIndex) => (
-              <Grid item xs={12} key={filling.id}>
-                <Controller
-                  name={`passages.${passageIndex}.questions.${questionIndex}.fillings.${fillingIndex}.correctAnswer`}
-                  control={control}
-                  render={({ field }) => (
-                    <TextField {...field} label={`Correct Answer ${fillingIndex + 1}`} variant="outlined" fullWidth />
-                  )}
-                />
-                <Button onClick={() => removeFilling(passageIndex, questionIndex, fillingIndex)} variant="contained" color="secondary">
-                  Remove Filling Answer
-                </Button>
-              </Grid>
-            ))}
-            <Grid item xs={12}>
-              <Button onClick={() => addFilling(passageIndex, questionIndex)} variant="contained">
-                Add Filling Answer
-              </Button>
-            </Grid>
-          </Grid>
-        );
-      default:
-        return null;
+  const onSubmit = async (data: FormDataReading) => {
+    const saData = JSON.parse(JSON.stringify(data));
+    console.log('Form Data:', saData);
+
+    try {
+
+      const testID = await createTest(data);
+
+      const rt = new readingTest();
+
+      for (let i = 0; i < data.passages.length; i++) {
+        const passage = data.passages[i];
+
+        rt.addParagraph(passage.content);
+        if (passage.imgFile) {
+          await rt.addImage(passage.imgFile); // Assuming addImage method in readingTest class
+        }
+
+        rt.addQuestionair(passage.questionair);
+
+        for (let j = 0; j < passage.questions.length; j++) {
+          const question = passage.questions[j];
+          let acc = {};
+          if (question.type === 'multiplechoice') {
+            const choices = question.choices?.map((choice, index) => {
+              const item = {
+                [String.fromCharCode(65 + index)]: choice.content
+              };
+              acc = { ...acc, ...item };
+            });
+
+            console.log('acc:', acc);
+
+            const correctChoice = question.choices?.find(choice => choice.isCorrect)?.content;
+
+            rt.addMultiplechoiceQuestion(question.content, acc, correctChoice);
+          } else if (question.type === 'filling') {
+            question.fillings?.forEach((filling) => {
+
+              rt.addFillingQuestion(question.content, filling);
+            });
+          }
+        }
+      }
+
+      await rt.addRelationTest(testID); // Assuming 0 is a placeholder, change as needed
+      await rt.submitForm();
+
+      console.log('Reading Test created successfully');
+    } catch (error) {
+      console.error('Error submitting form:', error);
     }
   };
 
-  const onSubmit = async (data: ITest) => {
-    try {
-      console.log('Saving test data:', data);
+  return (
+    <Container>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Typography variant="h4" gutterBottom>
+          Reading Test
+        </Typography>
+        <Box mb={2}>
+          <Controller
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <TextField {...field} label="Test Name" fullWidth required />
+            )}
+          />
+        </Box>
+        <Box mb={2}>
+          <Controller
+            name="start"
+            control={control}
+            render={({ field }) => (
+              <TextField {...field} label="Start Date" type="date" fullWidth required />
+            )}
+          />
+        </Box>
+        <Box mb={2}>
+          <Controller
+            name="end"
+            control={control}
+            render={({ field }) => (
+              <TextField {...field} label="End Date" type="date" fullWidth required />
+            )}
+          />
+        </Box>
+        <Box mb={2}>
+          <Controller
+            name="duration"
+            control={control}
+            render={({ field }) => (
+              <TextField {...field} label="Duration (minutes)" type="number" fullWidth required />
+            )}
+          />
+        </Box>
+        <Box mb={2}>
+          <Typography variant="subtitle1" gutterBottom>
+            Type: {watch('type')}
+          </Typography>
+        </Box>
+        {passagesFields.map((passage, passageIndex) => (
+          <Box key={passageIndex} mb={4} p={2} border={1} borderRadius={5} borderColor="grey.300">
+            <Typography variant="h6" gutterBottom>
+              Passage {passageIndex + 1}
+            </Typography>
+            <Controller
+              name={`passages.${passageIndex}.questionair`}
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} label="Questionair" fullWidth multiline rows={4} />
+              )}
+            />
+            <Box mt={2}>
+              <Controller
+                name={`passages.${passageIndex}.content`}
+                control={control}
+                render={({ field }) => (
+                  <TextField {...field} label="Content" fullWidth multiline rows={4} />
+                )}
+              />
+            </Box>
+            <Box mt={2}>
+              <Grid container spacing={2} alignItems="center">
+                <Grid item xs={6}>
+                  <input
+                    accept="image/*"
+                    id={`passage-${passageIndex}-image-upload`}
+                    type="file"
+                    onChange={(e) => {
+                      const file = e.target.files && e.target.files[0];
+                      setValue(`passages.${passageIndex}.imgFile`, file || null);
+                    }}
+                    style={{ display: 'none' }}
+                  />
+                  <label htmlFor={`passage-${passageIndex}-image-upload`}>
+                    <Button variant="contained" color="primary" component="span">
+                      Upload Image
+                    </Button>
+                  </label>
+                </Grid>
+                <Grid item xs={6}>
+                  {watch(`passages.${passageIndex}.imgFile`) && (
+                    <img
+                      src={URL.createObjectURL(watch(`passages.${passageIndex}.imgFile`))}
+                      alt="Uploaded"
+                      style={{ maxWidth: '100px', maxHeight: '100px', marginLeft: '10px' }}
+                    />
+                  )}
+                </Grid>
+              </Grid>
+            </Box>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => addQuestion(passageIndex)}
+              style={{ borderColor: 'blue', marginTop: '10px' }}
+            >
+              Add Question
+            </Button>
+            {watch(`passages.${passageIndex}.questions`).map((question, questionIndex) => (
+              <Box key={questionIndex} mt={2} p={2} border={1} borderRadius={5} borderColor="grey.300">
+                <Typography variant="subtitle1" gutterBottom>
+                  Question {questionIndex + 1}
+                </Typography>
+                <Controller
+                  name={`passages.${passageIndex}.questions.${questionIndex}.content`}
+                  control={control}
+                  render={({ field }) => (
+                    <TextField {...field}
+                      label="Question Content"
+                      fullWidth
+                      multiline
+                      rows={2}
+                    />
+                  )}
+                />
+                <Controller
+                  name={`passages.${passageIndex}.questions.${questionIndex}.type`}
+                  control={control}
+                  render={({ field }) => (
+                    <Select {...field} label="Question Type" fullWidth>
+                      <MenuItem value="multiplechoice">Multiple Choice</MenuItem>
+                      <MenuItem value="filling">Filling</MenuItem>
+                    </Select>
+                  )}
+                />
+                {question.type === 'multiplechoice' && (
+                  <Box mt={2}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => addMultipleChoiceOption(passageIndex, questionIndex)}
+                      style={{ borderColor: 'blue', marginBottom: '10px' }}
+                    >
+                      Add Option
+                    </Button>
+                    {question.choices?.map((choice, choiceIndex) => (
+                      <Box key={choiceIndex} mt={2} p={2} border={1} borderRadius={5} borderColor="grey.300">
+                        <Controller
+                          name={`passages.${passageIndex}.questions.${questionIndex}.choices.${choiceIndex}.content`}
+                          control={control}
+                          render={({ field }) => (
+                            <TextField {...field} label={`Option ${choiceIndex + 1}`} fullWidth />
+                          )}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Controller
+                              name={`passages.${passageIndex}.questions.${questionIndex}.choices.${choiceIndex}.isCorrect`}
+                              control={control}
+                              render={({ field }) => (
+                                <Checkbox {...field} color="primary" />
+                              )}
+                            />
+                          }
+                          label="Correct"
+                        />
+                        <Button
+                          variant="outlined"
+                          color="secondary"
+                          onClick={() => removeMultipleChoiceOption(passageIndex, questionIndex, choiceIndex)}
+                          style={{ borderColor: 'red', marginLeft: '10px' }}
+                        >
+                          Remove Option
+                        </Button>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+                {question.type === 'filling' && (
+                  <Box mt={2}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => addFilling(passageIndex, questionIndex)}
+                      style={{ borderColor: 'blue', marginBottom: '10px' }}
+                    >
+                      Add Filling
+                    </Button>
+                    {question.fillings?.map((filling, fillingIndex) => (
+                      <Box key={fillingIndex} mt={2} p={2} border={1} borderRadius={5} borderColor="grey.300">
+                        <Controller
+                          name={`passages.${passageIndex}.questions.${questionIndex}.fillings.${fillingIndex}`}
+                          control={control}
+                          render={({ field }) => (
+                            <TextField {...field} label={`Filling ${fillingIndex + 1}`} fullWidth />
+                          )}
+                        />
+                        <Button
+                          variant="outlined"
+                          color="secondary"
+                          onClick={() => removeFilling(passageIndex, questionIndex, fillingIndex)}
+                          style={{ borderColor: 'red', marginLeft: '10px' }}
+                        >
+                          Remove Filling
+                        </Button>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => removeQuestion(passageIndex, questionIndex)}
+                  style={{ borderColor: 'red', marginTop: '10px' }}
+                >
+                  Remove Question
+                </Button>
+              </Box>
+            ))}
+          </Box>
+        ))}
+        <Button variant="contained" color="primary" type="submit" fullWidth>
+          Submit
+        </Button>
+      </form>
+    </Container>
+  );
+};
 
-      // Create the test
-      const testResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          data: {
-            name: data.name,
-            Start: data.start.toISOString(),
-            End: data.end.toISOString(),
-            Duration: data.duration,
-            type: 'Reading',
-          }
-        }),
-      });
-
-      if (!testResponse.ok) {
-        throw new Error('Failed to create test');
-      }
-
-      const testData = await testResponse.json();
-      const testId = testData.data.id;
-
-      // Create passages and questions
-      for (const passage of data.passages) {
-        const passageResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/passages`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            data: {
-              order: passage.order,
-              content: passage.content,
-              img: passage.img,
-              test: testId,
-            }
-          }),
-        });
-
-        if (!passageResponse.ok) {
-          throw new Error('Failed to create passage');
-        }
-
-        const passageData = await passageResponse.json();
-        const passageId = passageData.data.id;
-
-        for (const question of passage.questions) {
-          const questionResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/questions`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              data: {
-                type: question.type,
-                content: question.content,
-                passage: passageId,
-              }
-            }),
-          });
-
-          if (!questionResponse.ok) {
-            throw new Error('Failed to create question');
-          }
-
-          const questionData = await questionResponse.json();
-          const questionId = questionData.data.id;
-
-          if (question.type === 'multiplechoice') {
-            for (const choice of question.multiplechoices) {
-              await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/multiplechoices`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  data: {
-                    content: choice.content,
-                    isCorrect: choice.isCorrect,
-                    question: questionId,
-                  }
-                }),
-              });
-            }
-          } else if (question.type === 'filling') {
-            for (const filling

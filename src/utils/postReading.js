@@ -1,6 +1,8 @@
-'use server'
 
-class readingTest {
+import { uploadMedia } from "@/utils/postRequest"
+
+export class readingTest {
+    form;
     constructor() {
         this.form = {
             ReadingComponent: []
@@ -40,7 +42,6 @@ class readingTest {
     async addRelationTest(id) {
         const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`, {
             headers: {
-            'Cache-Control': 'no-cache',
             },
         });
         let data = await response.json();
@@ -53,7 +54,20 @@ class readingTest {
         this.form['test'] = test[0];
     }
 
+    async addImage(File) {
+        const form = new FormData()
+        form.append('files', File)
+        const img_data = await uploadMedia(form)
+        this.form.ReadingComponent.push({
+            __component: "ielts-reading.image",
+            url: img_data[0].url
+            
+        })
+        console.log(img_data[0].url);
+    }
+
     async submitForm() {
+        console.log(this.form);
         const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/reading-tests`, { 
         method: "POST", 
         body: JSON.stringify({data :this.form}), 
@@ -64,27 +78,27 @@ class readingTest {
         console.log(dt);
     }
   }
-  //khởi tạo object
-  const rt = new readingTest();
+//   //khởi tạo object
+//   const rt = new readingTest();
 
-  //nhận 1 string là paragraph
-  rt.addParagraph('paragraph 123');
+//   //nhận 1 string là paragraph
+//   rt.addParagraph('paragraph 123');
 
-  // nhận 1 string là questionair
-  rt.addQuestionair('questionair 456');
+//   // nhận 1 string là questionair
+//   rt.addQuestionair('questionair 456');
 
-  // nhận 1 string là question, 1 string là answer
-  rt.addFillingQuestion('question 4444446', 'answer 123');
+//   // nhận 1 string là question, 1 string là answer
+//   rt.addFillingQuestion('question 4444446', 'answer 123');
 
-  // nhận 1 string là question, 1 object theo định dạng bên dưới là các lựa chọn của câu hỏi, 1 string là đáp án của câu hỏi
-  rt.addMultiplechoiceQuestion('multiple choice 123', {
-    A: '1',
-    B: '2',
-    C: '3'
-  }, 'B');
+//   // nhận 1 string là question, 1 object theo định dạng bên dưới là các lựa chọn của câu hỏi, 1 string là đáp án của câu hỏi
+//   rt.addMultiplechoiceQuestion('multiple choice 123', {
+//     A: '1',
+//     B: '2',
+//     C: '3'
+//   }, 'B');
 
-  // nhận 1 số là id của test cần relate đến
-  await rt.addRelationTest(5);
-  await rt.submitForm();
+//   // nhận 1 số là id của test cần relate đến
+//   await rt.addRelationTest(5);
+//   await rt.submitForm();
 
-  // add theo thứ tự paragraph -> questionair -> các questions -> paragraph -> ...., sau đó addRelation và cuối cùng là submit form
+//   // add theo thứ tự paragraph -> image(optional) -> questionair -> các questions -> paragraph -> ...., sau đó addRelation và cuối cùng là submit form

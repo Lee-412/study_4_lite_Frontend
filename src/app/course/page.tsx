@@ -13,7 +13,7 @@ const TestPage = async () => {
 
     return (        <>
             <TestContainer tests={data.data}/>
-            {/* <TestConnection /> */}
+            <TestConnection />
         </>
     )
 };

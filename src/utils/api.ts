@@ -1,4 +1,41 @@
 import { FormDataType } from "@/component/Examination/Writing/writing"
+import { FormDataReading } from "@/component/Examination/reading";
+
+export const createTest = async (data: FormDataReading) => {
+
+    const isoStartDate = new Date(data.start).toISOString();
+    const isoEndDate = new Date(data.end).toISOString();
+
+
+    let dataToserver = {
+        name: data.name,
+        start: isoStartDate,
+        end: isoEndDate,
+        duration: data.duration,
+        type: 'Reading',
+
+    }
+    console.log(dataToserver);
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          dataToserver
+        }),
+      });
+  
+      const result = await response.json();
+      console.log(result)
+      return 5;
+    } catch (error) {
+      console.error('Error creating test:', error);
+      throw error;
+    }
+  };
 
 export const submitDataWrting = async (formData: FormDataType) => {
     let dataToserver = {
