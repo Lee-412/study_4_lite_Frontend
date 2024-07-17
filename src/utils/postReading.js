@@ -1,5 +1,5 @@
 'use server'
-
+import { uploadMedia } from "@/utils/postRequest"
 class readingTest {
     constructor() {
         this.form = {
@@ -53,6 +53,18 @@ class readingTest {
         this.form['test'] = test[0];
     }
 
+    async addImage(File) {
+        const form = new FormData()
+        form.append('files', File)
+        const img_data = await uploadMedia(form)
+        this.form.ReadingComponent.push({
+            __component: "ielts-reading.image",
+            url: img_data[0].url
+            
+        })
+        console.log(img_data[0].url);
+    }
+
     async submitForm() {
         const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/reading-tests`, { 
         method: "POST", 
@@ -87,4 +99,4 @@ class readingTest {
   await rt.addRelationTest(5);
   await rt.submitForm();
 
-  // add theo thứ tự paragraph -> questionair -> các questions -> paragraph -> ...., sau đó addRelation và cuối cùng là submit form
+  // add theo thứ tự paragraph -> image(optional) -> questionair -> các questions -> paragraph -> ...., sau đó addRelation và cuối cùng là submit form

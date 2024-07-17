@@ -1,5 +1,7 @@
 import WritingLayout from '@/component/WritingTestLayout/WritingLayout'
 import React, { useRef } from 'react'
+import ReadingTest from '@/component/ReadingTestLayout/ReadingTest'
+import {fetchAllData} from '@/utils/getReading'
 
 async function page({params}:any) {
 
@@ -22,6 +24,20 @@ async function page({params}:any) {
     return (
       <WritingLayout writing={writing_data} test={test_data} writingID = {writing_id} userid={user_id}/>
     )
+  } else if (params.testid.includes('Reading')) {
+
+    const params_extraction = params.testid.split('-')
+    
+    const test_id = params_extraction[params_extraction.length - 1]
+    
+    const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL }/tests/${test_id}?populate=*`)
+    const dt= await response.json()
+    const reading_id = dt.data.attributes.reading_test.data.id;
+
+    const data = await fetchAllData(reading_id);
+    return (
+      <ReadingTest data={data} testID={params.testid} />
+    );
   }
   return (
     <div className="hehe">
