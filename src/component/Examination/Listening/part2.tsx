@@ -12,9 +12,15 @@ import { useEffect, useState } from 'react';
 import { ListeningTest } from '@/utils/postListening';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+const lt = new ListeningTest();
+
 const Part2 = (props: any) => {
     const { formData, setFormData, uploadedImage2, setUploadedImage2, uploadedAudio2, setUploadedAudio2 } = props;
-    const [questions, setQuestions] = useState<{ type: string, content: string, answer: string, choices?: { [key: string]: string } }[]>([]);
+    const [questions, setQuestions] = useState<{ type: string, content: string, answer: string, choices?: { [key: string]: string } }[]>(formData?.question2|| []);
+    // const [audio1, setAudio1] = useState();
+    // const [image1, setImage1] = useState();
+    // console.log(formData)
+
     useEffect(() => {
         if (formData.img2 && formData.img2.data && formData.img2.data.length > 0) {
             const imageUrl = formData.img2.data[0].attributes.formats ?
@@ -57,6 +63,7 @@ const Part2 = (props: any) => {
 
     const addQuestion = () => {
         setQuestions([...questions, { type: 'filling', content: '', answer: '', choices: {} }]);
+        setFormData({ ...formData, question2: questions });
     };
 
     const handleQuestionChange = (index: number, field: string, value: string) => {
@@ -64,7 +71,7 @@ const Part2 = (props: any) => {
             qIndex === index ? { ...question, [field]: value } : question
         );
         setQuestions(newQuestions);
-        setFormData({ ...formData, questions: newQuestions });
+        setFormData({ ...formData, question2: newQuestions });
     };
 
     const handleChoiceChange = (index: number, choice: string, value: string) => {
@@ -72,7 +79,7 @@ const Part2 = (props: any) => {
             qIndex === index ? { ...question, choices: { ...question.choices, [choice]: value } } : question
         );
         setQuestions(newQuestions);
-        setFormData({ ...formData, questions: newQuestions });
+        setFormData({ ...formData, question2: newQuestions });
     };
 
     const renderChoices = (questionIndex: number) => (
@@ -93,12 +100,18 @@ const Part2 = (props: any) => {
     const removeQuestion = (index: number) => {
         const newQuestions = questions.filter((_, qIndex) => qIndex !== index);
         setQuestions(newQuestions);
-        setFormData({ ...formData, questions: newQuestions });
+        setFormData({ ...formData, questions2: newQuestions });
     };
+    
 
-    const lt = new ListeningTest();
-
+    const handleAddAudio = (audio: any ) => {
+         lt.addAudio(audio)
+    }
+    const handleAddImage = (image: any) => {
+         lt.addImage(image)
+    }
     const handleSubmit = async () => {
+        console.log(lt)
         for (const question of questions) {
             if (question.type === 'filling') {
                 lt.addFilling(question.content, question.answer);
@@ -113,22 +126,6 @@ const Part2 = (props: any) => {
         <>
             <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                 <Box sx={{ width: 'calc(50% - 16px)' }}>
-                    <label htmlFor="upload-photo1">
-                        <input
-                            style={{ display: 'none' }}
-                            id="upload-photo1"
-                            name="upload-photo1"
-                            type="file"
-                            onChange={handleFileChange1}
-                        />
-                        <IconButton color="primary" aria-label="upload picture" component="span">
-                            <PhotoCameraIcon />
-                        </IconButton>
-                    </label>
-                    <span style={{ marginLeft: '8px', color: 'rgba(0, 0, 0, 0.54)' }}>
-                        Upload image
-                    </span>
-                    <br />
                     <label htmlFor="upload-audio1">
                         <input
                             style={{ display: 'none' }}
@@ -136,14 +133,36 @@ const Part2 = (props: any) => {
                             name="upload-audio1"
                             type="file"
                             accept="audio/*"
-                            onChange={handleAudioChange1}
+                            onChange={(e) => {
+                              if (e.target.files !== null) handleAddAudio(e.target.files[0])
+                                handleAudioChange1(e) 
+                            }}
                         />
                         <IconButton color="primary" aria-label="upload audio" component="span">
                             <AudiotrackIcon />
                         </IconButton>
+                        <span style={{ marginLeft: '8px', color: 'rgba(0, 0, 0, 0.54)' }}>
+                            Upload audio
+                        </span>
+                    </label>
+                    <br/>
+                    <label htmlFor="upload-photo1">
+                        <input
+                            style={{ display: 'none' }}
+                            id="upload-photo1"
+                            name="upload-photo1"
+                            type="file"
+                            onChange={(e) => {
+                              if (e.target.files !== null) handleAddImage(e.target.files[0])
+                                handleFileChange1(e)
+                            }}
+                        />
+                        <IconButton color="primary" aria-label="upload picture" component="span">
+                            <PhotoCameraIcon />
+                        </IconButton>
                     </label>
                     <span style={{ marginLeft: '8px', color: 'rgba(0, 0, 0, 0.54)' }}>
-                        Upload audio
+                        Upload image
                     </span>
                 </Box>
                 <Box sx={{
@@ -153,17 +172,17 @@ const Part2 = (props: any) => {
                     alignItems: 'center',
                     flexDirection: 'column',
                 }}>
+                    {uploadedAudio2 && (
+                        <audio controls>
+                            <source src={uploadedAudio2} type="audio/ogg" />
+                        </audio>
+                    )}
                     {uploadedImage2 && (
                         <img
                             style={{ maxWidth: '90%', maxHeight: '65%', objectFit: 'contain' }}
                             src={uploadedImage2}
                             alt="Uploaded"
                         />
-                    )}
-                    {uploadedAudio2 && (
-                        <audio controls>
-                            <source src={uploadedAudio2} type="audio/ogg" />
-                        </audio>
                     )}
                 </Box>
             </Box>
@@ -176,7 +195,9 @@ const Part2 = (props: any) => {
                     flexDirection: 'column',
                 }}
             >
-                {questions.map((question, index) => (
+                {
+                questions.map((question, index) =>{
+                 return  (
                     <Box key={index} sx={{ mb: 2, width: '100%', position: 'relative' }}>
                       <TextField
                             fullWidth
@@ -211,7 +232,8 @@ const Part2 = (props: any) => {
                             sx={{ mb: 2 }}
                         />
                     </Box>
-                ))}
+                )
+                } )}
                 <Button variant="contained" onClick={addQuestion} sx={{ mb: 2 }}>
                     Add Question
                 </Button>

@@ -15,11 +15,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const lt = new ListeningTest();
 
 const Part1 = (props: any) => {
-    const { formData, setFormData, uploadedImage1, setUploadedImage1, uploadedAudio1, setUploadedAudio1 } = props;
-    const [questions1, setQuestions] = useState<{ type: string, content: string, answer: string, choices?: { [key: string]: string } }[]>(formData?.question1|| []);
-    const [audio1, setAudio1] = useState();
-    const [image1, setImage1] = useState();
-    console.log(formData)
+    const { formData, setFormData, uploadedImage1, setUploadedImage1, uploadedAudio1, setUploadedAudio1} = props;
+    const [questions, setQuestions] = useState<{ type: string, content: string, answer: string, choices?: { [key: string]: string } }[]>(formData?.question1|| []);
+    // const [audio1, setAudio1] = useState();
+    // const [image1, setImage1] = useState();
+    // console.log(formData)
 
     useEffect(() => {
         if (formData.img1 && formData.img1.data && formData.img1.data.length > 0) {
@@ -62,12 +62,12 @@ const Part1 = (props: any) => {
     };
 
     const addQuestion = () => {
-        setQuestions([...questions1, { type: 'filling', content: '', answer: '', choices: {} }]);
-        setFormData({ ...formData, question1: questions1 });
+        setQuestions([...questions, { type: 'filling', content: '', answer: '', choices: {} }]);
+        setFormData({ ...formData, question1: questions });
     };
 
     const handleQuestionChange = (index: number, field: string, value: string) => {
-        const newQuestions = questions1.map((question, qIndex) =>
+        const newQuestions = questions.map((question, qIndex) =>
             qIndex === index ? { ...question, [field]: value } : question
         );
         setQuestions(newQuestions);
@@ -75,7 +75,7 @@ const Part1 = (props: any) => {
     };
 
     const handleChoiceChange = (index: number, choice: string, value: string) => {
-        const newQuestions = questions1.map((question, qIndex) => 
+        const newQuestions = questions.map((question, qIndex) => 
             qIndex === index ? { ...question, choices: { ...question.choices, [choice]: value } } : question
         );
         setQuestions(newQuestions);
@@ -89,7 +89,7 @@ const Part1 = (props: any) => {
                     key={choice}
                     fullWidth
                     label={`Choice ${choice}`}
-                    value={questions1[questionIndex].choices?.[choice] || ''}
+                    value={questions[questionIndex].choices?.[choice] || ''}
                     onChange={(e) => handleChoiceChange(questionIndex, choice, e.target.value)}
                     sx={{ mb: 2 }}
                 />
@@ -98,7 +98,7 @@ const Part1 = (props: any) => {
     );
 
     const removeQuestion = (index: number) => {
-        const newQuestions = questions1.filter((_, qIndex) => qIndex !== index);
+        const newQuestions = questions.filter((_, qIndex) => qIndex !== index);
         setQuestions(newQuestions);
         setFormData({ ...formData, questions1: newQuestions });
     };
@@ -112,7 +112,7 @@ const Part1 = (props: any) => {
     }
     const handleSubmit = async () => {
         console.log(lt)
-        for (const question of questions1) {
+        for (const question of questions) {
             if (question.type === 'filling') {
                 lt.addFilling(question.content, question.answer);
             } else if (question.type === 'multiplechoice') {
@@ -172,17 +172,17 @@ const Part1 = (props: any) => {
                     alignItems: 'center',
                     flexDirection: 'column',
                 }}>
+                    {uploadedAudio1 && (
+                        <audio controls>
+                            <source src={uploadedAudio1} type="audio/ogg" />
+                        </audio>
+                    )}
                     {uploadedImage1 && (
                         <img
                             style={{ maxWidth: '90%', maxHeight: '65%', objectFit: 'contain' }}
                             src={uploadedImage1}
                             alt="Uploaded"
                         />
-                    )}
-                    {uploadedAudio1 && (
-                        <audio controls>
-                            <source src={uploadedAudio1} type="audio/ogg" />
-                        </audio>
                     )}
                 </Box>
             </Box>
@@ -196,7 +196,7 @@ const Part1 = (props: any) => {
                 }}
             >
                 {
-                questions1.map((question, index) =>{
+                questions.map((question, index) =>{
                  return  (
                     <Box key={index} sx={{ mb: 2, width: '100%', position: 'relative' }}>
                       <TextField
