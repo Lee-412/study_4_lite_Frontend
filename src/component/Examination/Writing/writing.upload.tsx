@@ -36,6 +36,9 @@ const WritingTabUpload = (props: any) => {
 
     const handleSubmit = async () => {
         try {
+
+            console.log(formData);
+
             // Kiểm tra các thông tin bắt buộc của formData
             if (!formData.task1) {
                 alert("Vui lòng nhập nội dung Task 1.");
@@ -49,7 +52,7 @@ const WritingTabUpload = (props: any) => {
                 alert("Vui lòng nhập nội dung name Test.");
                 return;
             }
-            if (!formData.Duration || formData.Duration != Number) {
+            if (!formData.duration || isNaN(formData.duration)) {
                 alert("Vui lòng nhập thời gian làm bài.");
                 return;
             }
@@ -106,7 +109,7 @@ const WritingTabUpload = (props: any) => {
 
     const handleDurationChange = (event: any) => {
         const value = event.target.value as number;
-        setFormData({ ...formData, Duration: value });
+        setFormData({ ...formData, duration: value });
     };
 
 
@@ -190,7 +193,7 @@ const WritingTabUpload = (props: any) => {
                         fullWidth
                         label="Test Duration"
                         name="testDuration"
-                        value={formData.Duration}
+                        value={formData.duration}
                         onChange={handleDurationChange}
                         sx={{ mb: 2 }}
                     />
