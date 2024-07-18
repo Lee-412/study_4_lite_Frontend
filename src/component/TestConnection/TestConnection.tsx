@@ -13,6 +13,14 @@ function TestConnection() {
     }, [file_in, file])
     
     function onClick () {
+        // console.log(file_in);
+        // const form = new FormData()
+        // if(file !== undefined) {
+        //     form.append('files', file.files[0])
+        //     uploadMedia(form)
+        //     .then((data)=>{console.log(data);
+        //     })
+        // } 
         if(file !== undefined) {
             let listening_test = new ListeningTest()
             listening_test.addImage(file.files[0]).then(()=>{
