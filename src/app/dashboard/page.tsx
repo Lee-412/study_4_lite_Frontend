@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import HeaderAppAdmin from '@/component/header/header.admin';
 import NavigatorApp from '@/component/Navigator/navigator';
-import StudentManagement from '@/component/Admin/student.management';
+import StudentManagement from '@/component/Admin/student.management/student.management';
 import ContactAdmin from '@/component/Admin/contact.admin';
 import ClassManagement from '@/component/Admin/class.management';
 import ExamManagement from '@/component/Admin/exam.management';
@@ -189,8 +189,9 @@ export default function Paperbase() {
         }
         else {
             const dataServer = JSON.parse(userDataString);
-            console.log(dataServer);
+
             console.log(dataServer.user.authen);
+
             if (dataServer.user.authen == 'Admin') {
                 setUserData(dataServer)
             } else {
