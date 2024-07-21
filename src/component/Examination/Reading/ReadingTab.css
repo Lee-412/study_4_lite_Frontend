@@ -1,0 +1,15 @@
+.passage {
+    display: flex;
+}
+.input-file::file-selector-button{
+    background-color: #009BE5;
+    color: white;
+    width: 9em;
+    height: 3em;
+    border: solid 0.2px white;
+    border-radius: 8px;
+}
+.input-file::file-selector-button:hover{
+    opacity: 0.8;
+    cursor: pointer;
+}

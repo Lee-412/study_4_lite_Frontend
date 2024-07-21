@@ -3,31 +3,40 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import WritingTask1 from './task1.writing';
-import WritingTask2 from './task2.writing';
-import { FormDataType } from './writing';
+import Part1 from './part1';
+import Part2 from './part2';
+import Part3 from './part3';
+import Part4 from './part4';
+import { FormDataType } from './listening';
+import { ListeningTest } from '@/utils/postListening';
 import { submitDataTests, submitDataWrting, updateRelationtoWriting, uploadAndUpdate } from '@/utils/api';
-import { duration } from '@mui/material';
-
-export interface dataWritingProps {
+export interface ListeningProps {
     formData: FormDataType,
-    setFormData: (formData: FormDataType) => void,
     openModalUploadTab: boolean,
+    // answerMulipleChoice: IMultipleChoice,
+    // answerFilling: IFilling,
+    // questionType: QuestionType,
+    setFormData: (formData: FormDataType) => void,
     setOpenModalUploadTab: (openModalUploadTab: boolean) => void,
+    // setAnswerMulipleChoice: (answerMulipleChoice: IMultipleChoice) => void,
+    // setAnswerFilling: (answerFilling: IFilling) => void,
 }
 
-interface formDataImg {
-    img1: File;
-}
+const ListeningTabUpload = (props: any) => {
 
-const WritingTabUpload = (props: any) => {
-
-
+    const lt = new ListeningTest();
     const [currentTaskType, setCurrentTaskType] = useState<string | null>(null);
     const [uploadedImage1, setUploadedImage1] = useState<string | null>(null);
     const [uploadedImage2, setUploadedImage2] = useState<string | null>(null);
+    const [uploadedImage3, setUploadedImage3] = useState<string | null>(null);
+    const [uploadedImage4, setUploadedImage4] = useState<string | null>(null);
+    const [uploadedAudio1, setUploadedAudio1] = useState<string | null>(null);
+    const [uploadedAudio2, setUploadedAudio2] = useState<string | null>(null);
+    const [uploadedAudio3, setUploadedAudio3] = useState<string | null>(null);
+    const [uploadedAudio4, setUploadedAudio4] = useState<string | null>(null);
+    const [uploadQuestion1, setUploadQuestion1] = useState<string | null>(null);
 
-    const { formData, setFormData, openModalUploadTab, setOpenModalUploadTab, fetchTasks } = props;
+    const { formData, openModalUploadTab, questionType, answerMulipleChoice, answerFilling, setFormData, setOpenModalUploadTab, setAnswerFilling, setAnswerMulipleChoice, fetchTasks} = props;
 
     const handleAddTask = (type: string) => {
         setCurrentTaskType(type);
@@ -36,9 +45,6 @@ const WritingTabUpload = (props: any) => {
 
     const handleSubmit = async () => {
         try {
-
-            console.log(formData);
-
             // Kiểm tra các thông tin bắt buộc của formData
             if (!formData.task1) {
                 alert("Vui lòng nhập nội dung Task 1.");
@@ -52,7 +58,7 @@ const WritingTabUpload = (props: any) => {
                 alert("Vui lòng nhập nội dung name Test.");
                 return;
             }
-            if (!formData.duration || isNaN(formData.duration)) {
+            if (!formData.Duration || formData.Duration != Number) {
                 alert("Vui lòng nhập thời gian làm bài.");
                 return;
             }
@@ -101,6 +107,7 @@ const WritingTabUpload = (props: any) => {
 
         }
     };
+    //need to fix this submit
 
     const handleClose = () => {
         setOpenModalUploadTab(false);
@@ -109,7 +116,7 @@ const WritingTabUpload = (props: any) => {
 
     const handleDurationChange = (event: any) => {
         const value = event.target.value as number;
-        setFormData({ ...formData, duration: value });
+        setFormData({ ...formData, Duration: value });
     };
 
 
@@ -136,6 +143,7 @@ const WritingTabUpload = (props: any) => {
             name: event.target.value
         });
     }
+    
     return (
         <Modal
             open={openModalUploadTab}
@@ -159,41 +167,24 @@ const WritingTabUpload = (props: any) => {
             >
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                     <Button variant="outlined" onClick={() => handleAddTask('task1')} disabled={currentTaskType === 'task1'}>
-                        Add Task 1
+                        Task 1
                     </Button>
                     <Button variant="outlined" onClick={() => handleAddTask('task2')} disabled={currentTaskType === 'task2'}>
-                        Add Task 2
+                        Task 2
+                    </Button>
+                    <Button variant="outlined" onClick={() => handleAddTask('task3')} disabled={currentTaskType === 'task3'}>
+                        Task 3
+                    </Button>
+                    <Button variant="outlined" onClick={() => handleAddTask('task4')} disabled={currentTaskType === 'task4'}>
+                        Task 4
                     </Button>
                 </Box>
-
-                {currentTaskType && (
-                    <Box sx={{ mt: 2 }}>
-                        {currentTaskType === 'task1' && (
-                            <WritingTask1
-                                formData={formData}
-                                setFormData={setFormData}
-                                uploadedImage1={uploadedImage1}
-                                setUploadedImage1={setUploadedImage1}
-                            />
-                        )}
-                        {currentTaskType === 'task2' && (
-                            <WritingTask2
-                                formData={formData}
-                                setFormData={setFormData}
-                                uploadedImage2={uploadedImage2}
-                                setUploadedImage2={setUploadedImage2}
-                            />
-                        )}
-
-                    </Box>
-                )}
-
                 <Box sx={{ p: 2, display: 'flex', alignItems: 'center', mb: 2, flexDirection: "column" }}>
                     <TextField
                         fullWidth
                         label="Test Duration"
                         name="testDuration"
-                        value={formData.duration}
+                        value={formData.Duration}
                         onChange={handleDurationChange}
                         sx={{ mb: 2 }}
                     />
@@ -237,16 +228,74 @@ const WritingTabUpload = (props: any) => {
                         sx={{ mb: 2 }}
                     />
                 </Box>
-                <Box sx={{ mt: 2 }}>
-                    <Button variant="outlined" onClick={handleSubmit}>
-                        Submit
-                    </Button>
-                </Box>
+
+                {currentTaskType && (
+                    <Box sx={{ mt: 2 }}>
+                        {currentTaskType === 'task1' && (
+                            <Part1
+                                formData={formData}
+                                setFormData={setFormData}
+
+                                uploadedImage1={uploadedImage1}                                
+                                setUploadedImage1={setUploadedImage1}
+
+                                uploadedAudio1={uploadedAudio1}
+                                setUploadedAudio1={setUploadedAudio1}
+
+                                // uploadQuestion1={uploadQuestion1}
+                                // setUploadQuestion1={setUploadQuestion1}
+                            />
+                        )}
+                        {currentTaskType === 'task2' && (
+                            <Part2
+                                formData={formData}
+                                setFormData={setFormData}
+                        
+                                uploadedImage2={uploadedImage2}
+                                setUploadedImage2={setUploadedImage2}
+
+                                uploadedAudio2={uploadedAudio2}
+                                setUploadedAudio2={setUploadedAudio2}
+
+                                // uploadQuestion2={uploadQuestion2}
+                                // setUploadQuestion2={setUploadQuestion2}
+                            />
+                        )}
+                        {currentTaskType === 'task3' && (
+                            <Part3
+                                formData={formData}
+                                setFormData={setFormData}
+                               
+                                uploadedImage3={uploadedImage3}
+                                setUploadedImage3={setUploadedImage3}
+
+                                uploadedAudio3={uploadedAudio3}
+                                setUploadedAudio3={setUploadedAudio3}
+
+                                // uploadQuestion3={uploadQuestion3}
+                                // setUploadQuestion3={setUploadQuestion3}
+                            />
+                        )}
+                        {currentTaskType === 'task4' && (
+                            <Part4
+                                formData={formData}
+                                setFormData={setFormData}
+                                
+                                uploadedImage4={uploadedImage4}
+                                setUploadedImage4={setUploadedImage4}
+
+                                uploadedAudio4={uploadedAudio4}
+                                setUploadedAudio4={setUploadedAudio4}
+                            />
+                        )}
+
+                    </Box>
+                )}
             </Box>
         </Modal>
     );
 };
 
-export default WritingTabUpload;
+export default ListeningTabUpload;
 
 

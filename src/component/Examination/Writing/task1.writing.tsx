@@ -14,7 +14,7 @@ const WritingTask1 = (props: any) => {
     const { formData, setFormData, uploadedImage1, setUploadedImage1 } = props;
 
     React.useEffect(() => {
-        if (formData.img2 && formData.img1.data && formData.img1.data.length > 0) {
+        if (formData.img1 && formData.img1.data && formData.img1.data.length > 0) {
             const imageUrl = formData.img1.data[0].attributes.formats ?
                 formData.img1.data[0].attributes.formats.thumbnail.url :
                 formData.img1.data[0].attributes.url;

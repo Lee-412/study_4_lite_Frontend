@@ -19,8 +19,6 @@ const TestPage =  () => {
     const userId = userDataJson.user.id
     console.log(userDataJson.user.id);
     
-        
-
     if(isLoading) return(<h1>Đợi 1 lát</h1>)
     return (        
         <>

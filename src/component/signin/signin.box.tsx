@@ -68,6 +68,8 @@ const SinginBox = () => {
 
             const data = await response.json();
             console.log(data);
+            // console.log(data.user.authen);
+
 
             if (response.ok) {
                 console.log(data.user.id);

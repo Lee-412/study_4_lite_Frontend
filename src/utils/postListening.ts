@@ -1,5 +1,6 @@
 
 import { uploadMedia } from "@/utils/postRequest"
+import { Lyrics } from "@mui/icons-material"
 
 
 export class ListeningTest {
@@ -59,6 +60,24 @@ export class ListeningTest {
         })
     }
 
+    removeQuestion(questionair: string) {
+        this.form.Listening = this.form.Listening.filter(
+          (item: any) => !(item.__component === "ielts-listening.questionair" && item.Questionaire === questionair)
+        );
+      }
+
+    removeFilling(question: string) {
+        this.form.Listening = this.form.Listening.filter(
+          (item: any) => !(item.__component === "ielts-listening.filling" && item.Question === question)
+        );
+      }
+    
+    removeMultipleChoice(question: string) {
+        this.form.Listening = this.form.Listening.filter(
+          (item: any) => !(item.__component === "ielts-listening.multiple-choice" && item.Question === question)
+        );
+      }
+
     async addRelationTest(id:any){
         const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`);
         let data = await response.json();
@@ -72,13 +91,14 @@ export class ListeningTest {
     }
 
     async submitForm() {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-tests?populate[listening][populate]=*`, { 
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-tests?populate=*`, { 
             method: "POST", 
             body: JSON.stringify({data :this.form}), 
             headers: { 
                 "Content-type": "application/json"
             }});
             const dt = await response.json();
+            console.log(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-tests?populate=*`,)
             return dt
     }
 
@@ -101,6 +121,7 @@ export class ListeningTest {
     B: '2',
     C: '3'
   });
+  
 
   // nhận 1 số là id của test cần relate đến
   
