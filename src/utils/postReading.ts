@@ -1,26 +1,26 @@
-'use server'
 import { uploadMedia } from "@/utils/postRequest"
-class readingTest {
+export class ReadingTest {
+    form:any
     constructor() {
         this.form = {
             ReadingComponent: []
         }
     }
-    addParagraph(paragraph) {
+    addParagraph(paragraph:string) {
         this.form.ReadingComponent.push({
             __component: 'ielts-reading.paragraph',
             Content: paragraph
         })
     }
   
-    addQuestionair(questionair) {
+    addQuestionair(questionair:string) {
         this.form.ReadingComponent.push({
             __component: 'ielts-reading.questionair',
             Content: questionair
         })
     }
   
-    addFillingQuestion(question, answer) {
+    addFillingQuestion(question:string, answer:string) {
         this.form.ReadingComponent.push({
             __component: "ielts-reading.filling",
             Question: question,
@@ -28,7 +28,7 @@ class readingTest {
         })
     }
   
-    addMultiplechoiceQuestion(question, choices, answer) {
+    addMultiplechoiceQuestion(question:string, choices:any, answer:string) {
         this.form.ReadingComponent.push({
             __component: "ielts-reading.multiple-choice",
             Question: question,
@@ -37,15 +37,11 @@ class readingTest {
         })
     }
   
-    async addRelationTest(id) {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`, {
-            headers: {
-            'Cache-Control': 'no-cache',
-            },
-        });
+    async addRelationTest(id:number) {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`);
         let data = await response.json();
         data = data.data;
-        const test = data.filter(item => item.id === id);
+        const test = data.filter((item:any) => item.id === id);
         if (test.length == 0) {
             console.log("There is no test with that id");
             return;
@@ -53,7 +49,8 @@ class readingTest {
         this.form['test'] = test[0];
     }
 
-    async addImage(File) {
+    async addImage(File:any) {
+        if(File === undefined) return undefined
         const form = new FormData()
         form.append('files', File)
         const img_data = await uploadMedia(form)
@@ -62,7 +59,14 @@ class readingTest {
             url: img_data[0].url
             
         })
-        console.log(img_data[0].url);
+        console.log({
+            __component: "ielts-reading.image",
+            url: img_data[0].url
+            
+        });
+        
+        return img_data
+        //console.log(img_data[0].url);
     }
 
     async submitForm() {
@@ -73,11 +77,12 @@ class readingTest {
             "Content-type": "application/json"
         }});
         const dt = await response.json();
-        console.log(dt);
+        //console.log(dt);
+        return dt
     }
   }
   //khởi tạo object
-  const rt = new readingTest();
+  const rt = new ReadingTest();
 
   //nhận 1 string là paragraph
   rt.addParagraph('paragraph 123');
@@ -96,7 +101,5 @@ class readingTest {
   }, 'B');
 
   // nhận 1 số là id của test cần relate đến
-  await rt.addRelationTest(5);
-  await rt.submitForm();
-
+ 
   // add theo thứ tự paragraph -> image(optional) -> questionair -> các questions -> paragraph -> ...., sau đó addRelation và cuối cùng là submit form

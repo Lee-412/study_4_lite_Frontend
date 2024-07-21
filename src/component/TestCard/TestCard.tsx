@@ -40,7 +40,7 @@ function TestCard({test, userid}:any) {
                         Loại đề: {test.attributes.type} 
                     </Typography>
                 </CardContent>
-                <Grid container alignItems="center" justifyContent="space-between" sx={{ padding: '10px' }}>
+                {/* <Grid container alignItems="center" justifyContent="space-between" sx={{ padding: '10px' }}>
                     <Grid item>
                         <Typography variant="body1" color="text.secondary">
                             Ngày bắt đầu: {test.attributes.Start}
@@ -51,7 +51,7 @@ function TestCard({test, userid}:any) {
                             Ngày kết thúc: {test.attributes.End}
                         </Typography>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Card>
         </Grid>
         <GeneralModal open={open} setOpen={setOpen} type={test.attributes.type} testID={test.id} userid={userid}/>
