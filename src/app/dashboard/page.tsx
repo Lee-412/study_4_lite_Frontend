@@ -181,6 +181,7 @@ export default function Paperbase() {
     // state lưu trữ data user
     const [userData, setUserData] = React.useState();
 
+
     useEffect(() => {
         const userDataString = sessionStorage.getItem('userData');
         if (!userDataString) {
@@ -188,7 +189,8 @@ export default function Paperbase() {
         }
         else {
             const dataServer = JSON.parse(userDataString);
-            console.log(dataServer.user.authen);
+            console.log(dataServer);
+
 
             if (dataServer.user.authen == 'Admin') {
                 setUserData(dataServer)
@@ -230,45 +232,42 @@ export default function Paperbase() {
 
     return (
         <>
-            {userData ?
+            {/* {userData ? */}
 
-                <ThemeProvider theme={theme}>
-                    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-                        <CssBaseline />
-                        <Box
-                            component="nav"
-                            sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                        >
-                            {isSmUp ? null : (
-                                <NavigatorApp
-                                    PaperProps={{ style: { width: drawerWidth } }}
-                                    variant="temporary"
-                                    open={mobileOpen}
-                                    onClose={handleDrawerToggle}
-                                    setActiveComponent={setActiveComponent}
-                                />
-                            )}
+            <ThemeProvider theme={theme}>
+                <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+                    <CssBaseline />
+                    <Box
+                        component="nav"
+                        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                    >
+                        {isSmUp ? null : (
                             <NavigatorApp
                                 PaperProps={{ style: { width: drawerWidth } }}
-                                sx={{ display: { sm: 'block', xs: 'none' } }}
+                                variant="temporary"
+                                open={mobileOpen}
+                                onClose={handleDrawerToggle}
                                 setActiveComponent={setActiveComponent}
                             />
+                        )}
+                        <NavigatorApp
+                            PaperProps={{ style: { width: drawerWidth } }}
+                            sx={{ display: { sm: 'block', xs: 'none' } }}
+                            setActiveComponent={setActiveComponent}
+                        />
+                    </Box>
+                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        <HeaderAppAdmin onDrawerToggle={handleDrawerToggle} />
+                        <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
+                            {renderContent()}
                         </Box>
-                        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                            <HeaderAppAdmin onDrawerToggle={handleDrawerToggle} />
-                            <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-                                {renderContent()}
-                            </Box>
-                            <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
-                                <Copyright />
-                            </Box>
+                        <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
+                            <Copyright />
                         </Box>
                     </Box>
-                </ThemeProvider>
-                :
-                <> </>
-            }
-
+                </Box>
+            </ThemeProvider>
+            <> </>
 
         </>
 

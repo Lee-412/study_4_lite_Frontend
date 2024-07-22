@@ -200,7 +200,7 @@ const WritingTabUpload = (props: any) => {
 
                     <TextField
                         fullWidth
-                        label="Strat"
+                        label="Start"
                         type="datetime-local"
                         name="start"
                         value={formData.start_date}

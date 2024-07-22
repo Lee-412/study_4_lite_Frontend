@@ -1,10 +1,9 @@
-import React from 'react';
+import React from 'react'
 
-export const ReadingTab = () => {
+const ReadingTab = () => {
     return (
-        <div>
-            <h2>Reading</h2>
-            <p>Nội dung quản lý bài thi phần Reading</p>
-        </div>
-    );
-};
+        <div>reading</div>
+    )
+}
+
+export default ReadingTab;
