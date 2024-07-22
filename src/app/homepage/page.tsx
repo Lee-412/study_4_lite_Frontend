@@ -1,4 +1,4 @@
-
+'use client'
 import FooterApp from "@/component/footer/footer";
 import HeaderApp from "@/component/header/header";
 import { Box, Container, } from "@mui/material";
@@ -6,6 +6,7 @@ import { Box, Container, } from "@mui/material";
 import TitleBox from "@/component/title/title.box";
 import ImageSlider from "@/component/slider/slide";
 import SinginPage from "../signin/page";
+import { createContext, useState } from "react";
 const slider = [
     {
         id: 1,
@@ -54,7 +55,7 @@ const slider = [
         data: 'new2'
     },
 ];
-export default async function HomePage1() {
+export default function HomePage1() {
     return (
         <Box sx={{
             backgroundColor: "#DCE2EA"
@@ -63,7 +64,7 @@ export default async function HomePage1() {
             <Container sx={{
             }}>
                 <TitleBox />
-                <SinginPage />
+                <SinginPage/>
                 <ImageSlider sliderData={slider} />
             </Container>
             <FooterApp />

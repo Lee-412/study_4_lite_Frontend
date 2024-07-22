@@ -10,7 +10,7 @@ const img_url = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8Q
 
 
 
-function TestCard({test}:any) {
+function TestCard({test, userid}:any) {
 
    
     const [open, setOpen] = useState(false)
@@ -40,7 +40,7 @@ function TestCard({test}:any) {
                         Loại đề: {test.attributes.type} 
                     </Typography>
                 </CardContent>
-                <Grid container alignItems="center" justifyContent="space-between" sx={{ padding: '10px' }}>
+                {/* <Grid container alignItems="center" justifyContent="space-between" sx={{ padding: '10px' }}>
                     <Grid item>
                         <Typography variant="body1" color="text.secondary">
                             Ngày bắt đầu: {test.attributes.Start}
@@ -51,10 +51,10 @@ function TestCard({test}:any) {
                             Ngày kết thúc: {test.attributes.End}
                         </Typography>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Card>
         </Grid>
-        <GeneralModal open={open} setOpen={setOpen} type={test.attributes.type} testID={test.id}/>
+        <GeneralModal open={open} setOpen={setOpen} type={test.attributes.type} testID={test.id} userid={userid}/>
         </>
     );
 }

@@ -1,12 +1,10 @@
 'use client'
 import { ListeningTest } from '@/utils/postListening'
-import { uploadMedia } from '@/utils/postRequest'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 function TestConnection() {
     const [file, setFile] = useState<any>()
     const [file_in, setFileIn] = useState<File>()
-    //fetch_listening()
     useEffect(()=>{
         if(file !== undefined) {
             file.files !== undefined? console.log(file.files) :  console.log('no result')
@@ -41,9 +39,6 @@ function TestConnection() {
                 })
             })
         }
-       
-        // .then((item)=>{console.log(item);
-        // })
         }
   return (
     <div>

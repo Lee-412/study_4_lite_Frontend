@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     TextField, Button, Grid, Box,
     InputAdornment,
@@ -15,7 +15,8 @@ import { useRouter } from 'next/navigation';
 
 const SinginBox = () => {
 
-
+    const [userLoginId, setUserLoginId] = useState<number>()
+    const [authen, setAuthen] = useState<string>()
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -40,9 +41,16 @@ const SinginBox = () => {
         });
     };
 
-    const handleCancel = () => {
-
-    }
+    useEffect(()=>{
+        //console.log(userLoginId);
+        if(userLoginId !== undefined) {
+            if(authen === 'Admin') {
+                route.push(`/dashboard?userid=${userLoginId}`);
+            } else {
+                route.push(`/course?userid=${userLoginId}`);
+            }
+        }
+    }, [userLoginId, authen])
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -65,8 +73,10 @@ const SinginBox = () => {
 
             if (response.ok) {
                 console.log(data.user.id);
-
-
+                setUserLoginId(data.user.id);
+                
+                
+                
                 // sessionStorage.setItem('userData', JSON.stringify({
                 //     token: data.jwt,
                 //     user: data.user,
@@ -83,9 +93,13 @@ const SinginBox = () => {
 
                 // Redirect based on user role
                 if (data.user.authen === 'Admin') {
-                    route.push('/dashboard');
+                    //console.log(userLoginId);
+                    setAuthen('Admin')
+                    
                 } else {
-                    route.push('/course');
+                    console.log(userLoginId);
+                    setAuthen('User')
+                    
                 }
             } else {
                 console.error('Login failed:', data);

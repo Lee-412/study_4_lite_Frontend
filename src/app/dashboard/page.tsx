@@ -181,16 +181,25 @@ export default function Paperbase() {
     // state lưu trữ data user
     const [userData, setUserData] = React.useState();
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 688a1fa6285b31842f21cd171094f5cb1343831b
     useEffect(() => {
         const userDataString = sessionStorage.getItem('userData');
+        
         if (!userDataString) {
             router.push('/');
         }
         else {
             const dataServer = JSON.parse(userDataString);
+<<<<<<< HEAD
             console.log(dataServer);
 
+=======
+
+            console.log(dataServer.user.authen);
+>>>>>>> 688a1fa6285b31842f21cd171094f5cb1343831b
 
             if (dataServer.user.authen == 'Admin') {
                 setUserData(dataServer)
@@ -232,6 +241,7 @@ export default function Paperbase() {
 
     return (
         <>
+<<<<<<< HEAD
             {/* {userData ? */}
 
             <ThemeProvider theme={theme}>
@@ -242,6 +252,26 @@ export default function Paperbase() {
                         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
                     >
                         {isSmUp ? null : (
+=======
+            {userData ?
+            
+                <ThemeProvider theme={theme}>
+                    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+                        <CssBaseline />
+                        <Box
+                            component="nav"
+                            sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                        >
+                            {isSmUp ? null : (
+                                <NavigatorApp
+                                    PaperProps={{ style: { width: drawerWidth } }}
+                                    variant="temporary"
+                                    open={mobileOpen}
+                                    onClose={handleDrawerToggle}
+                                    setActiveComponent={setActiveComponent}
+                                />
+                            )}
+>>>>>>> 688a1fa6285b31842f21cd171094f5cb1343831b
                             <NavigatorApp
                                 PaperProps={{ style: { width: drawerWidth } }}
                                 variant="temporary"
@@ -265,9 +295,16 @@ export default function Paperbase() {
                             <Copyright />
                         </Box>
                     </Box>
+<<<<<<< HEAD
                 </Box>
             </ThemeProvider>
             <> </>
+=======
+                </ThemeProvider>
+               :
+               <></>
+            }
+>>>>>>> 688a1fa6285b31842f21cd171094f5cb1343831b
 
         </>
 
