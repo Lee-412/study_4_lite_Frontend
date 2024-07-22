@@ -54,6 +54,7 @@ export default function ReadingTest({data, testID, userId}) {
                     {item.questions.map((question, questionIndex) => (
                       <div key={questionIndex}>
                         <ReactMarkdown>{question.questionair}</ReactMarkdown>
+                        {question.image && <img src={`http://127.0.0.1:1337${question.image}`} />}
                         {question.questionAndAnswer.map((q, qIndex) => (
                           <Question key={qIndex} question={q} handleInput={callbackHandler}/>
                         ))}

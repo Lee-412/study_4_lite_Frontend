@@ -17,6 +17,9 @@ export async function fetchAllData(id) {
                 questionAndAnswer:[]
             }
             result[result.length - 1].questions.push(newQuestion);
+        } else if (data[i].__component === "ielts-reading.image") {
+            const q = result[result.length - 1].questions;
+            q[q.length - 1].image = data[i].url
         } else if (data[i].__component === "ielts-reading.filling") {
             numberOfQuestion ++;
             const newQuestionAndAnswer = {

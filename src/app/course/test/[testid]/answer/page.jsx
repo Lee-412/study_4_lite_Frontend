@@ -5,12 +5,19 @@ const AnswerPage = async ({ searchParams }) => {
     const answers =  JSON.parse(searchParams.answers);
     const userId = JSON.parse(searchParams.userId);
     let score = 0;
+    let answerData={}
     for (let i = 0; i < answers.length; ++ i) {
+      let isCorrect = false
       if (answers[i] == studentAnswers[i]) {
         score ++;
+        isCorrect = true
+      }
+      answerData[i+1] = {
+        answer: studentAnswers[i],
+        correct: isCorrect
       }
     }
-    await postResult(score, '123', searchParams.testId, userId)
+    await postResult(score, '123', searchParams.testId, userId, answerData)
 
   return (
     <div className="m-4 flex flex-col">
@@ -25,12 +32,12 @@ const AnswerPage = async ({ searchParams }) => {
   );
 };
 
-async function postResult(score, time_finish, testId, userId) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`);
+async function postResult(score, time_finish, testId, userId, answerData) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests/`);
   let data = await res.json();
   data = data.data;
-  const test = data.filter(item => item.id == testId);
-  if (test.length == 0) {
+  const test = data
+  if (test == null) {
       console.log("There is no test with that id");
       return;
   }
@@ -52,7 +59,8 @@ async function postResult(score, time_finish, testId, userId) {
     Time_finish: time_finish,
     date: new Date(),
     test: test[0],
-    user: user[0]
+    user: user[0],
+    answer_data: answerData
   }
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/student-tests`, { 
