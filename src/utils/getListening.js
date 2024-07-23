@@ -23,7 +23,10 @@ export async function fetchListeningData(id) {
             result[result.length - 1].questions.push(newQuestion);
         } else if (data[i].__component === "ielts-listening.img-url") {
             const q = result[result.length - 1].questions;
-            q[q.length - 1].image = data[i].url
+            if(q[q.length - 1] !== undefined) {
+                q[q.length - 1].image = data[i].url
+            }
+            
         } else if (data[i].__component === "ielts-listening.filling") {
             numberOfQuestion ++;
             const newQuestionAndAnswer = {

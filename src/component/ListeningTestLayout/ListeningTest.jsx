@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import Question from '../ReadingTestLayout/Question';
-import Timer from '../ReadingTestLayout/timer';
+import Timer from '../ReadingTestLayout/Timer';
 import '../../app/globals.css'
 import ReactMarkdown from "react-markdown";
 import Link from 'next/link';
