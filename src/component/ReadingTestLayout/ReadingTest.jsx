@@ -1,7 +1,7 @@
 'use client'
 import React, { useState} from 'react';
 import Question from './Question';
-import Timer from './timer';
+import Timer from './Timer';
 import '../../app/globals.css'
 import ReactMarkdown from "react-markdown";
 import Link from 'next/link';
