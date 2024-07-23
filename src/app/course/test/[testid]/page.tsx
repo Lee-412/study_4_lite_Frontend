@@ -1,7 +1,9 @@
 import WritingLayout from '@/component/WritingTestLayout/WritingLayout'
 import React, { useRef } from 'react'
 import ReadingTest from '@/component/ReadingTestLayout/ReadingTest'
+import  ListeningTest  from '@/component/ListeningTestLayout/ListeningTest'
 import {fetchAllData} from '@/utils/getReading'
+import {fetchListeningData} from '@/utils/getListening'
 
 async function page({params}:any) {
 
@@ -29,15 +31,25 @@ async function page({params}:any) {
     const params_extraction = params.testid.split('-')
     
     const test_id = params_extraction[params_extraction.length - 1]
-    
     const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL }/tests/${test_id}?populate=*`)
     const dt= await response.json()
     const reading_id = dt.data.attributes.reading_test.data.id;
 
     const data = await fetchAllData(reading_id);
     return (
-      <ReadingTest data={data} testID={params.testid} />
+      <ReadingTest data={data} testID={params.testid} userId={user_id} />
     );
+  } else if (params.testid.includes('Listening')) {
+    const params_extraction = params.testid.split('-')
+    
+    const test_id = params_extraction[params_extraction.length - 1]
+    const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL }/tests/${test_id}?populate=*`)
+    const dt= await response.json()
+    const listening_id = dt.data.attributes.listening_test.data.id;
+    const data = await fetchListeningData(listening_id)
+    return (
+      <ListeningTest data={data} testID={params.testid} userId={user_id}/>
+    )
   }
   return (
     <div className="hehe">
