@@ -2,10 +2,11 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { Button, Box, Table, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Button, Box, Table, TableCell, TableContainer, TableHead, TableRow, Paper, TableBody, IconButton } from '@mui/material';
 import ListeningTabUpload from './listening.upload';
 import ListeningTabEdit from './listening.edit';
 import { ListeningTest } from '@/utils/postListening';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export type ImageType = {
     data: {
@@ -156,7 +157,9 @@ export const ListeningTab = () => {
 
     const fetchTasks = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/passages?populate=*`, { cache: "no-store" });
+            const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/listening-tests
+
+?populate=*`, { cache: "no-store" });
             const data = await response.json();
             setTasks(data.data.map((item: any) => ({
                 id: item.id,
@@ -221,6 +224,7 @@ export const ListeningTab = () => {
             console.error('Error deleting task and associated test:', error);
         }
     };
+    console.log(tasks);
 
     return (
         <Box>
@@ -240,6 +244,29 @@ export const ListeningTab = () => {
                         </TableRow>
                     </TableHead>
                     {/* ... Map over tasks and render TableRow here ... */}
+
+                    <TableBody>
+
+                        {tasks.map((task, index) => (
+                            task.test.data ? (
+                                <TableRow key={task.id}>
+                                    <TableCell>{task.test.data.attributes.name}</TableCell>
+                                    <TableCell>{task.test.data.attributes.Start}</TableCell>
+                                    <TableCell>{task.test.data.attributes.End}</TableCell>
+                                    {/* <TableCell>{task.task1}</TableCell>
+                                    <TableCell>{task.task2}</TableCell> */}
+                                    <TableCell>
+                                        {/* <IconButton onClick={() => handleEditTask(task, task.id)}>
+                                            <EditIcon />
+                                        </IconButton> */}
+                                        <IconButton onClick={() => handleDeleteTask(task.id)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ) : null
+                        ))}
+                    </TableBody>
                 </Table>
             </TableContainer>
             <ListeningTabUpload

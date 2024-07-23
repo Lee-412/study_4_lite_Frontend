@@ -11,12 +11,12 @@ import HeaderAppAdmin from '@/component/header/header.admin';
 import NavigatorApp from '@/component/Navigator/navigator';
 import StudentManagement from '@/component/Admin/student.management/student.management';
 import ContactAdmin from '@/component/Admin/contact.admin';
-import ClassManagement from '@/component/Admin/class.management';
-import ExamManagement from '@/component/Admin/exam.management';
+import ExamManagement from '@/component/Admin/exam.management/exam.management';
 import Logout from '@/component/Admin/logout.admin';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import ClassManagement from '@/component/Admin/class.managemnet/class.management';
 
 
 function Copyright() {
@@ -181,25 +181,15 @@ export default function Paperbase() {
     // state lưu trữ data user
     const [userData, setUserData] = React.useState();
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 688a1fa6285b31842f21cd171094f5cb1343831b
     useEffect(() => {
         const userDataString = sessionStorage.getItem('userData');
-        
+
         if (!userDataString) {
             router.push('/');
         }
         else {
             const dataServer = JSON.parse(userDataString);
-<<<<<<< HEAD
-            console.log(dataServer);
-
-=======
-
-            console.log(dataServer.user.authen);
->>>>>>> 688a1fa6285b31842f21cd171094f5cb1343831b
 
             if (dataServer.user.authen == 'Admin') {
                 setUserData(dataServer)
@@ -226,7 +216,7 @@ export default function Paperbase() {
         switch (activeComponent) {
             case 'Quản lý học viên':
                 return <StudentManagement />;
-            case 'Quản lý lớp học':
+            case 'Quản lý điểm':
                 return <ClassManagement />;
             case 'Quản lý đề thi':
                 return <ExamManagement />;
@@ -241,20 +231,9 @@ export default function Paperbase() {
 
     return (
         <>
-<<<<<<< HEAD
-            {/* {userData ? */}
 
-            <ThemeProvider theme={theme}>
-                <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-                    <CssBaseline />
-                    <Box
-                        component="nav"
-                        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                    >
-                        {isSmUp ? null : (
-=======
             {userData ?
-            
+
                 <ThemeProvider theme={theme}>
                     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
                         <CssBaseline />
@@ -271,7 +250,6 @@ export default function Paperbase() {
                                     setActiveComponent={setActiveComponent}
                                 />
                             )}
->>>>>>> 688a1fa6285b31842f21cd171094f5cb1343831b
                             <NavigatorApp
                                 PaperProps={{ style: { width: drawerWidth } }}
                                 variant="temporary"
@@ -279,32 +257,30 @@ export default function Paperbase() {
                                 onClose={handleDrawerToggle}
                                 setActiveComponent={setActiveComponent}
                             />
-                        )}
-                        <NavigatorApp
-                            PaperProps={{ style: { width: drawerWidth } }}
-                            sx={{ display: { sm: 'block', xs: 'none' } }}
-                            setActiveComponent={setActiveComponent}
-                        />
-                    </Box>
-                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <HeaderAppAdmin onDrawerToggle={handleDrawerToggle} />
-                        <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-                            {renderContent()}
+
+                            <NavigatorApp
+                                PaperProps={{ style: { width: drawerWidth } }}
+                                sx={{ display: { sm: 'block', xs: 'none' } }}
+                                setActiveComponent={setActiveComponent}
+                            />
                         </Box>
-                        <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
-                            <Copyright />
+                        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                            <HeaderAppAdmin
+                                onDrawerToggle={handleDrawerToggle}
+
+                            />
+                            <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
+                                {renderContent()}
+                            </Box>
+                            <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
+                                <Copyright />
+                            </Box>
                         </Box>
                     </Box>
-<<<<<<< HEAD
-                </Box>
-            </ThemeProvider>
-            <> </>
-=======
                 </ThemeProvider>
-               :
-               <></>
+                :
+                <></>
             }
->>>>>>> 688a1fa6285b31842f21cd171094f5cb1343831b
 
         </>
 

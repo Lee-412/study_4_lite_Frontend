@@ -23,7 +23,7 @@ const categories = [
                 active: true,
             },
             {
-                id: 'Quản lý lớp học',
+                id: 'Quản lý điểm',
                 icon: <SchoolIcon />,
                 active: true,
             },
@@ -37,7 +37,7 @@ const categories = [
     {
         id: 'Hệ thống',
         children: [
-            { id: 'Đăng xuất', icon: <ExitToAppIcon /> },
+            // { id: 'Đăng xuất', icon: <ExitToAppIcon /> },
             { id: 'Liên hệ với người quản trị', icon: <ContactMailIcon /> },
         ],
     },

@@ -10,11 +10,24 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { useEffect } from 'react';
 
-export default function ClassManagement() {
+const ClassManagement = () => {
+
+    const fetchData = async () => {
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?populate=*`, { cache: 'no-store' });
+        const data = await response.json();
+        console.log(data);
+
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
     return (
         <>
             Quản lý lớp học
         </>
     );
 }
+export default ClassManagement

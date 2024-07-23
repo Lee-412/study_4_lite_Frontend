@@ -88,6 +88,7 @@ const ListeningTabUpload = (props: ListeningProps) => {
 
                 const result = await lt.submitForm();
                 console.log(result);
+                fetchTasks();
 
 
 

@@ -104,7 +104,7 @@ const QuestionForm = (props: QuestionFormData) => {
                             fullWidth
                             label={`Question ${index + 1}`}
                             value={ques.question}
-                            onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
+                            onChange={(e: any) => handleQuestionChange(index, 'question', e.target.value)}
                             sx={{ mb: 2 }}
                         />
 
@@ -114,7 +114,7 @@ const QuestionForm = (props: QuestionFormData) => {
                                     fullWidth
                                     label="Answer"
                                     value={ques.answer || ''}
-                                    onChange={(e) => handleQuestionChange(index, 'answer', e.target.value)}
+                                    onChange={(e: any) => handleQuestionChange(index, 'answer', e.target.value)}
                                     sx={{ mb: 2 }}
                                 />
                             </>
@@ -128,7 +128,7 @@ const QuestionForm = (props: QuestionFormData) => {
                                             fullWidth
                                             label={`Choice ${choiceIndex + 1}`}
                                             value={choice}
-                                            onChange={(e) => handleChoiceChange(index, choiceIndex, e.target.value)}
+                                            onChange={(e: any) => handleChoiceChange(index, choiceIndex, e.target.value)}
                                             sx={{ marginRight: 1 }}
                                         />
                                         <IconButton onClick={() => handleRemoveChoice(index, choiceIndex)} color="error">
@@ -145,7 +145,7 @@ const QuestionForm = (props: QuestionFormData) => {
                                     fullWidth
                                     label="Correct Choice"
                                     value={ques.correctChoice || ''}
-                                    onChange={(e) => handleQuestionChange(index, 'correctChoice', e.target.value)}
+                                    onChange={(e: any) => handleQuestionChange(index, 'correctChoice', e.target.value)}
                                     sx={{ mb: 2 }}
                                 />
                             </>
