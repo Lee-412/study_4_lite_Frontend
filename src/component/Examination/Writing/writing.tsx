@@ -144,11 +144,11 @@ const WritingTab = () => {
 
             const testsRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?populate=*`, { cache: "no-store" });
             const dataTests = await testsRes.json();
-            console.log(dataTests);
+            // console.log(dataTests);
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings?populate=*`, { cache: "no-store" });
             const data = await response.json();
-            console.log(data);
+            //  console.log(data);
 
             setTasks(data.data.map((item: any) => ({
                 id: item.id,
@@ -158,7 +158,7 @@ const WritingTab = () => {
                 img2: item.attributes.img2,
                 test: item.attributes.test
             })));
-            console.log(tasks);
+            //  console.log(tasks);
 
 
         } catch (error) {
@@ -174,19 +174,19 @@ const WritingTab = () => {
         setOpenModalUploadTab(true);
     };
 
-    console.log(tasks);
+    // console.log(tasks);
 
     const setImages = () => {
         tasks.map((task: TaskType) => {
-            console.log(task.id, task.img1, task.img2);
+            //       console.log(task.id, task.img1, task.img2);
         })
 
     }
     setImages();
     const handleEditTask = (task: TaskType, id: number) => {
-        console.log(task);
+        //  console.log(task);
         setDataEdit(task);
-        console.log(dataEdit);
+        //  console.log(dataEdit);
         setOpenModalEditTab(true);
 
     };
@@ -196,7 +196,7 @@ const WritingTab = () => {
 
             if (!window.confirm("Muốn xoá thật không")) return;
 
-            console.log(taskId);
+            //      console.log(taskId);
 
 
             const taskResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${taskId}?populate=*`, {

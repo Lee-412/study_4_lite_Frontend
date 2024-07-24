@@ -28,7 +28,7 @@ const AddUserModal = (props: any) => {
     };
     const handleSubmit = async () => {
         try {
-            console.log(formUserData);
+            //console.log(formUserData);
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/users`, {
                 method: 'POST',
@@ -43,12 +43,10 @@ const AddUserModal = (props: any) => {
                 handleClose();
             } else {
                 console.error('Error adding user:', response.statusText);
-                console.log("lỗi");
 
             }
         } catch (error) {
             console.error('Error adding user:', error);
-            console.log("lỗi nhưng ở ngoài,");
 
         }
     };
