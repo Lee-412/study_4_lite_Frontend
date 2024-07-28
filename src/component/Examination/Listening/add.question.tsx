@@ -102,6 +102,7 @@ const QuestionForm = (props: QuestionFormData) => {
                     <Box key={index} sx={{ mb: 2, padding: '10px', border: '1px solid #ddd' }}>
                         <TextField
                             fullWidth
+                            multiline
                             label={`Question ${index + 1}`}
                             value={ques.question}
                             onChange={(e: any) => handleQuestionChange(index, 'question', e.target.value)}
@@ -112,6 +113,7 @@ const QuestionForm = (props: QuestionFormData) => {
                             <>
                                 <TextField
                                     fullWidth
+                                    multiline
                                     label="Answer"
                                     value={ques.answer || ''}
                                     onChange={(e: any) => handleQuestionChange(index, 'answer', e.target.value)}
@@ -126,6 +128,7 @@ const QuestionForm = (props: QuestionFormData) => {
                                     <Box key={choiceIndex} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                         <TextField
                                             fullWidth
+                                            multiline
                                             label={`Choice ${choiceIndex + 1}`}
                                             value={choice}
                                             onChange={(e: any) => handleChoiceChange(index, choiceIndex, e.target.value)}
@@ -143,12 +146,16 @@ const QuestionForm = (props: QuestionFormData) => {
                                 </Button>
                                 <TextField
                                     fullWidth
+                                    multiline
                                     label="Correct Choice"
                                     value={ques.correctChoice || ''}
                                     onChange={(e: any) => handleQuestionChange(index, 'correctChoice', e.target.value)}
                                     sx={{ mb: 2 }}
                                 />
                             </>
+                        )}
+                        {ques.type === 'questionair' && (
+                            <></>
                         )}
 
                         <IconButton onClick={() => handleRemoveQuestion(index)} color="error">
@@ -165,6 +172,8 @@ const QuestionForm = (props: QuestionFormData) => {
                 >
                     <MenuItem value="filling">Filling</MenuItem>
                     <MenuItem value="multiple choice">Multiple Choice</MenuItem>
+                    <MenuItem value="questionair">Questionair</MenuItem>
+
                 </Select>
 
                 <Button variant="contained" onClick={handleAddQuestion} sx={{ mb: 2 }}>

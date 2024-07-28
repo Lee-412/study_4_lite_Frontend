@@ -32,10 +32,21 @@ const ListeningTabUpload = (props: ListeningProps) => {
 
     const handleAddPart = (part: number) => setCurrentPart(part);
 
+    const clearDataImgAudio = () => {
+        setUploadedImage1(null);
+        setUploadedAudio1(null);
+        setUploadedImage2(null);
+        setUploadedAudio2(null);
+        setUploadedImage3(null);
+        setUploadedAudio3(null);
+        setUploadedImage4(null);
+        setUploadedAudio4(null);
+
+    }
 
     const handleSubmit = async () => {
         try {
-            // console.log(formData);
+            console.log(formData);
 
 
             if (!formData.name) {
@@ -54,7 +65,7 @@ const ListeningTabUpload = (props: ListeningProps) => {
                 const latestTestId = testsData.data[0].id;
 
                 const lt = new ListeningTest();
-
+                //upload part1
                 if (formData.audio1) {
                     await lt.addAudio(formData.audio1);
                 }
@@ -67,18 +78,112 @@ const ListeningTabUpload = (props: ListeningProps) => {
 
                     if (question.type === 'filling') {
                         lt.addFilling(question.question, question.answer);
-                    } else if (question.type === 'multiple choice') {
-                        let dataChoices = {};
-                        question.choices.map((choice: any, index: any) => {
-                            let indexChar = String.fromCharCode(65 + index);
-                            dataChoices = {
-                                ...dataChoices,
-                                [indexChar]: choice
-                            }
-                        })
-                        lt.addMultiplechoice(question.question, question.correctChoice, dataChoices);
-                    }
+                    } else
+                        if (question.type === 'multiple choice') {
+                            let dataChoices = {};
+                            question.choices.map((choice: any, index: any) => {
+                                let indexChar = String.fromCharCode(65 + index);
+                                dataChoices = {
+                                    ...dataChoices,
+                                    [indexChar]: choice
+                                }
+                            })
+                            lt.addMultiplechoice(question.question, question.correctChoice, dataChoices);
+                        }
+                        else {
+                            lt.addQuestion(question.question)
+                        }
                 });
+
+                //upload part2
+                if (formData.audio2) {
+                    await lt.addAudio(formData.audio2);
+                }
+                if (formData.img2) {
+                    await lt.addImage(formData.img2);
+                }
+
+                formData.questions2.forEach((question: any) => {
+
+
+                    if (question.type === 'filling') {
+                        lt.addFilling(question.question, question.answer);
+                    } else
+                        if (question.type === 'multiple choice') {
+                            let dataChoices = {};
+                            question.choices.map((choice: any, index: any) => {
+                                let indexChar = String.fromCharCode(65 + index);
+                                dataChoices = {
+                                    ...dataChoices,
+                                    [indexChar]: choice
+                                }
+                            })
+                            lt.addMultiplechoice(question.question, question.correctChoice, dataChoices);
+                        }
+                        else {
+                            lt.addQuestion(question.question)
+                        }
+                });
+                //upload part3
+                if (formData.audio3) {
+                    await lt.addAudio(formData.audio3);
+                }
+                if (formData.img3) {
+                    await lt.addImage(formData.img3);
+                }
+
+                formData.questions3.forEach((question: any) => {
+
+
+                    if (question.type === 'filling') {
+                        lt.addFilling(question.question, question.answer);
+                    } else
+                        if (question.type === 'multiple choice') {
+                            let dataChoices = {};
+                            question.choices.map((choice: any, index: any) => {
+                                let indexChar = String.fromCharCode(65 + index);
+                                dataChoices = {
+                                    ...dataChoices,
+                                    [indexChar]: choice
+                                }
+                            })
+                            lt.addMultiplechoice(question.question, question.correctChoice, dataChoices);
+                        }
+                        else {
+                            lt.addQuestion(question.question)
+                        }
+                });
+
+                //upload part4
+                if (formData.audio4) {
+                    await lt.addAudio(formData.audio4);
+                }
+                if (formData.img4) {
+                    await lt.addImage(formData.img4);
+                }
+
+                formData.questions4.forEach((question: any) => {
+
+
+                    if (question.type === 'filling') {
+                        lt.addFilling(question.question, question.answer);
+                    } else
+                        if (question.type === 'multiple choice') {
+                            let dataChoices = {};
+                            question.choices.map((choice: any, index: any) => {
+                                let indexChar = String.fromCharCode(65 + index);
+                                dataChoices = {
+                                    ...dataChoices,
+                                    [indexChar]: choice
+                                }
+                            })
+                            lt.addMultiplechoice(question.question, question.correctChoice, dataChoices);
+                        }
+                        else {
+                            lt.addQuestion(question.question)
+                        }
+                });
+
 
 
                 const testId = latestTestId;
@@ -87,8 +192,34 @@ const ListeningTabUpload = (props: ListeningProps) => {
                 }
 
                 const result = await lt.submitForm();
-                //  console.log(result);
+                console.log(result);
                 fetchTasks();
+                setOpenModalUploadTab(false)
+
+                setFormData({
+                    name: '',
+                    Duration: 0,
+                    start_date: '',
+                    end_date: '',
+                    type: 'Listening',
+                    img1: null,
+                    img2: null,
+                    img3: null,
+                    img4: null,
+                    audio1: null,
+                    audio2: null,
+                    audio3: null,
+                    audio4: null,
+                    task1: '',
+                    task2: '',
+                    task3: '',
+                    task4: '',
+                    questions1: [],
+                    questions2: [],
+                    questions3: [],
+                    questions4: [],
+                })
+                clearDataImgAudio();
 
             }
         } catch (error) {
@@ -191,7 +322,6 @@ const ListeningTabUpload = (props: ListeningProps) => {
                 {currentPart === 1 && (
                     <PartComponent
                         part={currentPart}
-
                         formData={formData}
                         setFormData={setFormData}
                         initialImage={uploadedImage1 ? URL.createObjectURL(uploadedImage1) : undefined}
@@ -205,7 +335,6 @@ const ListeningTabUpload = (props: ListeningProps) => {
                 {currentPart === 2 && (
                     <PartComponent
                         part={currentPart}
-
                         formData={formData}
                         setFormData={setFormData}
                         initialImage={uploadedImage2 ? URL.createObjectURL(uploadedImage2) : undefined}
@@ -221,7 +350,6 @@ const ListeningTabUpload = (props: ListeningProps) => {
                 {currentPart === 3 && (
                     <PartComponent
                         part={currentPart}
-
                         formData={formData}
                         setFormData={setFormData}
                         initialImage={uploadedImage3 ? URL.createObjectURL(uploadedImage3) : undefined}

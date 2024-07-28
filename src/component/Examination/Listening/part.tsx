@@ -107,9 +107,9 @@ const PartComponent = (props: Part1ComponentProps) => {
         }
     };
 
-    const [questionType, setQuestionType] = useState<'filling' | 'multiple choice' | null>(null);
+    const [questionType, setQuestionType] = useState<'filling' | 'multiple choice' | 'questionair' | null>(null);
     const handleQuestionTypeChange = (event: any) => {
-        setQuestionType(event.target.value as 'filling' | 'multiple choice');
+        setQuestionType(event.target.value as 'filling' | 'multiple choice' | 'questionair');
     };
 
     const [newQuestionText, setNewQuestionText] = useState('');

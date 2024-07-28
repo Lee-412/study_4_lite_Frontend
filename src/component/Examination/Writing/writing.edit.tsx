@@ -94,6 +94,40 @@ const WritingTabEdit = (props: dataWritingProps) => {
 
     const handleClose = () => {
         setOpenModalEditTab(false);
+        setFormData({
+            id: 0,
+            name: '',
+            task1: '',
+            img1: null,
+            img2: null,
+            task2: '',
+            duration: 0,
+            type: 'Writing',
+            start_date: '',
+            end_date: '',
+        })
+        setDataEdit({
+            id: 0,
+            task1: '',
+            task2: '',
+            img1: null,
+            img2: null,
+            test: {
+                data: {
+                    id: 0,
+                    attributes: {
+                        name: '',
+                        Start: '',
+                        End: '',
+                        Duration: 0,
+                        type: '',
+                        createdAt: '',
+                        updatedAt: '',
+                        publishedAt: ''
+                    }
+                }
+            }
+        })
         setCurrentTaskType(null);
     };
 
