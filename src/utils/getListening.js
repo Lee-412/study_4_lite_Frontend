@@ -20,10 +20,11 @@ export async function fetchListeningData(id) {
                 questionair: data[i].Questionaire,
                 questionAndAnswer:[]
             }
+            if(result[result.length - 1] !== undefined)
             result[result.length - 1].questions.push(newQuestion);
         } else if (data[i].__component === "ielts-listening.img-url") {
-            const q = result[result.length - 1].questions;
-            if(q[q.length - 1] !== undefined) {
+            if(result[result.length - 1] !== undefined){
+                const q = result[result.length - 1].questions;
                 q[q.length - 1].image = data[i].url
             }
             
@@ -35,8 +36,10 @@ export async function fetchListeningData(id) {
                 question: data[i].Question,
                 answer: data[i].Answer
             }
-            const q = result[result.length - 1].questions;
-            q[q.length - 1].questionAndAnswer.push(newQuestionAndAnswer);
+            if(result[result.length - 1] !== undefined){
+                const q = result[result.length - 1].questions;
+                q[q.length - 1].questionAndAnswer.push(newQuestionAndAnswer);
+            }
         } else if (data[i].__component === "ielts-listening.multiple-choice") {
             numberOfQuestion ++;
             const newQuestionAndAnswer = {
@@ -46,8 +49,11 @@ export async function fetchListeningData(id) {
                 choices: data[i].Choices,
                 answer: data[i].Answer
             }
-            const q = result[result.length - 1].questions;
-            q[q.length - 1].questionAndAnswer.push(newQuestionAndAnswer);
+            if(result[result.length - 1] !== undefined){
+                const q = result[result.length - 1].questions;
+                q[q.length - 1].questionAndAnswer.push(newQuestionAndAnswer);
+            }
+            
         } else {
             continue;
         }

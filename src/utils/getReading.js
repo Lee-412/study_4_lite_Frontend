@@ -19,6 +19,7 @@ export async function fetchAllData(id) {
             result[result.length - 1].questions.push(newQuestion);
         } else if (data[i].__component === "ielts-reading.image") {
             const q = result[result.length - 1].questions;
+            if(q[q.length - 1] !== undefined)
             q[q.length - 1].image = data[i].url
         } else if (data[i].__component === "ielts-reading.filling") {
             numberOfQuestion ++;
@@ -29,6 +30,7 @@ export async function fetchAllData(id) {
                 answer: data[i].Answer
             }
             const q = result[result.length - 1].questions;
+            if(q[q.length - 1] !== undefined)
             q[q.length - 1].questionAndAnswer.push(newQuestionAndAnswer);
         } else if (data[i].__component === "ielts-reading.multiple-choice") {
             numberOfQuestion ++;
@@ -40,6 +42,7 @@ export async function fetchAllData(id) {
                 answer: data[i].Answer
             }
             const q = result[result.length - 1].questions;
+            if(q[q.length - 1] !== undefined)
             q[q.length - 1].questionAndAnswer.push(newQuestionAndAnswer);
         } else {
             continue;
