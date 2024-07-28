@@ -71,8 +71,8 @@ export const submitDataTests = async (formData: FormDataType) => {
 
 export async function uploadAndUpdate(objectId: string, file1: File, file2: File): Promise<void> {
     try {
-        // console.log(file1.type);
-        // console.log(file2.type);
+        console.log(file1.type);
+        console.log(file2.type);
         let uploadedImage1;
         let uploadedImage2;
         if (file1.type) {
@@ -84,17 +84,19 @@ export async function uploadAndUpdate(objectId: string, file1: File, file2: File
         }
 
         let updatedObject = null;
-        if (uploadedImage1) {
-            updatedObject = await updateObjectWithImage(objectId, uploadedImage1, 'img1')
+        if (uploadedImage1 && uploadedImage2) {
+            updatedObject = await updateObjectWithMultipleImage(objectId, uploadedImage1, uploadedImage2)
         }
         else {
+            if (uploadedImage1) {
+                updatedObject = await updateObjectWithImage(objectId, uploadedImage1, 'img1')
+            }
+
             if (uploadedImage2) {
                 updatedObject = await updateObjectWithImage(objectId, uploadedImage2, 'img2')
             }
-            else if (uploadedImage1 && uploadedImage2) {
-                updatedObject = await updateObjectWithMultipleImage(objectId, uploadedImage1, uploadedImage2)
-            }
         }
+
 
         console.log('Updated object:success');
     } catch (error) {
@@ -108,7 +110,7 @@ export async function uploadImage(file: File): Promise<any> {
     formData.append('files', file);
 
     try {
-        const response = await fetch('http://localhost:1337/api/upload', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/upload`, {
             method: 'POST',
             body: formData,
         });
@@ -129,7 +131,7 @@ export async function updateObjectWithMultipleImage(objectId: string, uploadedIm
     try {
         // console.log(objectId);
 
-        const response = await fetch(`http://localhost:1337/api/wrtings/${objectId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${objectId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -160,7 +162,7 @@ export async function updateObjectWithImage(objectId: string, uploadedImage: any
     try {
         //  console.log(objectId);
         if (img == 'img1') {
-            const response = await fetch(`http://localhost:1337/api/wrtings/${objectId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${objectId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -181,7 +183,7 @@ export async function updateObjectWithImage(objectId: string, uploadedImage: any
             return updatedObject;
         }
         else {
-            const response = await fetch(`http://localhost:1337/api/wrtings/${objectId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/wrtings/${objectId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
