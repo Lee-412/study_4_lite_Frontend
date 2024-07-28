@@ -125,39 +125,7 @@ const Users = () => {
                                         student={student}
                                         handleEditStudent={handleEditStudent}
                                         handleDeleteStudent={handleDeleteStudent} />
-                                    // <>
 
-                                    //     {
-                                    //         student.authen != 'Admin'
-                                    //             ?
-                                    //             <>
-
-                                    //                 <TableRow>
-                                    //                     <TableCell>{student.username}</TableCell>
-                                    //                     <TableCell>{student.email}</TableCell>
-                                    //                     <TableCell>{student.fullname}</TableCell>
-
-                                    //                     <TableCell>
-                                    //                         <IconButton onClick={() => handleEditStudent(student.id)}>
-                                    //                             <EditIcon />
-                                    //                         </IconButton>
-                                    //                         <IconButton onClick={() => handleDeleteStudent(student.id)}>
-                                    //                             <DeleteIcon />
-                                    //                         </IconButton>
-                                    //                         {/* <IconButton onClick={() => handleContactStudent(student.id)}>
-                                    //                             <DeleteIcon />
-                                    //                         </IconButton> */}
-                                    //                         {/* <IconButton onClick={() => setOpen(!open)}>
-                                    //                             {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                                    //                         </IconButton> */}
-                                    //                     </TableCell>
-                                    //                 </TableRow>
-                                    //             </>
-                                    //             :
-                                    //             <>
-                                    //             </>
-                                    //     }
-                                    // </>
                                 ))
                             ) : (
                                 <TableRow>
@@ -192,7 +160,6 @@ const Users = () => {
         </Paper>
     );
 };
-
 
 
 export default Users;

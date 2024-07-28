@@ -11,14 +11,30 @@ import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 const lightColor = 'rgba(255, 255, 255, 0.7)';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { useRouter } from 'next/navigation';
 
 interface HeaderProps {
     onDrawerToggle: () => void;
 }
 
 export default function HeaderAppAdmin(props: HeaderProps) {
-    const { onDrawerToggle } = props;
 
+    const userDataString = sessionStorage.getItem('userData');
+    console.log(userDataString);
+
+
+    const { onDrawerToggle } = props;
+    const route = useRouter();
+
+    const handleLogout = () => {
+        if (window.confirm('Bạn có muốn đăng xuất không?')) {
+            sessionStorage.clear();
+            route.push('/')
+        };
+
+        // alert("đăng xuất")
+    }
     return (
         <React.Fragment>
             <AppBar color="primary" position="sticky" elevation={0}>
@@ -46,10 +62,17 @@ export default function HeaderAppAdmin(props: HeaderProps) {
                             </Tooltip>
                         </Grid>
                         <Grid item>
-                            <IconButton color="inherit" sx={{ p: 0.5 }}>
-                                {/* <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" /> */}
+                            <IconButton color="inherit" sx={{ p: 0.5 }} onClick={handleLogout}>
+                                <ExitToAppIcon />
                             </IconButton>
                         </Grid>
+
+                        <Grid item>
+                            <IconButton color="inherit" sx={{ p: 0.5 }}>
+                                <Avatar src="" alt="" />
+                            </IconButton>
+                        </Grid>
+
                     </Grid>
                 </Toolbar>
             </AppBar>

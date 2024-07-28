@@ -40,7 +40,7 @@ export const submitDataTests = async (formData: FormDataType) => {
         Duration: formData.duration,
 
     }
-    console.log(dataToserver);
+    //.log(dataToserver);
     const checkResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?filters[name][$eq]=${formData.name}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -59,7 +59,7 @@ export const submitDataTests = async (formData: FormDataType) => {
             data: dataToserver
         }),
     })
-    console.log(response);
+    // console.log(response);
 
 
     if (!response.ok) {
@@ -71,8 +71,8 @@ export const submitDataTests = async (formData: FormDataType) => {
 
 export async function uploadAndUpdate(objectId: string, file1: File, file2: File): Promise<void> {
     try {
-        console.log(file1.type);
-        console.log(file2.type);
+        // console.log(file1.type);
+        // console.log(file2.type);
         let uploadedImage1;
         let uploadedImage2;
         if (file1.type) {
@@ -127,7 +127,7 @@ export async function uploadImage(file: File): Promise<any> {
 //upload multiple img
 export async function updateObjectWithMultipleImage(objectId: string, uploadedImage1: any, uploadedImage2: any): Promise<any> {
     try {
-        console.log(objectId);
+        // console.log(objectId);
 
         const response = await fetch(`http://localhost:1337/api/wrtings/${objectId}`, {
             method: 'PUT',
@@ -158,7 +158,7 @@ export async function updateObjectWithMultipleImage(objectId: string, uploadedIm
 
 export async function updateObjectWithImage(objectId: string, uploadedImage: any, img: any): Promise<any> {
     try {
-        console.log(objectId);
+        //  console.log(objectId);
         if (img == 'img1') {
             const response = await fetch(`http://localhost:1337/api/wrtings/${objectId}`, {
                 method: 'PUT',
@@ -210,7 +210,7 @@ export async function updateObjectWithImage(objectId: string, uploadedImage: any
 
 export const updateRelationtoWriting = async (test_id: number, writing_id: number): Promise<any> => {
     try {
-        console.log('Updating test with ID:', test_id, 'to have writing with ID:', writing_id);
+        // console.log('Updating test with ID:', test_id, 'to have writing with ID:', writing_id);
 
         const data_update: object = {
             method: 'PUT',
@@ -233,7 +233,7 @@ export const updateRelationtoWriting = async (test_id: number, writing_id: numbe
         }
 
         const updatedObject = await response.json();
-        console.log('Updated test:', updatedObject);
+        // console.log('Updated test:', updatedObject);
         return updatedObject;
     } catch (error) {
         console.error('Error updating object:', error);
@@ -293,7 +293,7 @@ export const submitEditDataTests = async (formData: FormDataType, dataEdit: any)
         type: "Wrting",
         Duration: formData.duration,
     }
-    console.log(dataToserver);
+    //console.log(dataToserver);
 
     // Check if test exists
     const checkResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests?filters[name][$eq]=${dataEdit.test.data.attributes.name}`, {
@@ -301,7 +301,7 @@ export const submitEditDataTests = async (formData: FormDataType, dataEdit: any)
         headers: { 'Content-Type': 'application/json' },
     });
     const checkData = await checkResponse.json();
-    console.log(checkData);
+    //  console.log(checkData);
 
     if (checkData.data.length > 0) {
         const testId = checkData.data[0].id;

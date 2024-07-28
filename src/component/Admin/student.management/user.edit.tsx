@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 
 const EditUserModal = (props: any) => {
     const { openEditUser, setOpenEditUser, fetchUsers, formUserData, setFormUserData, selectedUser } = props;
-    console.log(selectedUser);
+    //console.log(selectedUser);
 
     useEffect(() => {
         if (selectedUser) {
@@ -17,7 +17,7 @@ const EditUserModal = (props: any) => {
                 fullname: selectedUser.fullname,
                 // Assuming you don't want to edit password
             });
-            console.log(selectedUser);
+            //  console.log(selectedUser);
 
         }
     }, [selectedUser]);
@@ -29,7 +29,7 @@ const EditUserModal = (props: any) => {
             [name]: value,
         });
     };
-    console.log(selectedUser);
+    // console.log(selectedUser);
 
     const handleClose = () => {
         setOpenEditUser(false);
@@ -37,7 +37,7 @@ const EditUserModal = (props: any) => {
 
     const handleSubmit = async () => {
         try {
-            console.log(formUserData);
+            //       console.log(formUserData);
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/users/${selectedUser.id}`, {
                 method: 'PUT',
@@ -56,12 +56,12 @@ const EditUserModal = (props: any) => {
                 handleClose();
             } else {
                 console.error('Error updating user:', response.statusText);
-                console.log("not ok");
+                //     console.log("not ok");
 
             }
         } catch (error) {
             console.error('Error updating user:', error);
-            console.log("not try");
+            //   console.log("not try");
 
         }
     };

@@ -81,8 +81,6 @@ const WritingTabEdit = (props: dataWritingProps) => {
                     console.log(formData.img1);
                     console.log(formData.img2);
                     console.log(formData.img1 as unknown as File);
-
-
                     await uploadAndUpdate(wrtingId as unknown as string, formData.img1 as unknown as File, formData.img2 as unknown as File);
                 }
             }
