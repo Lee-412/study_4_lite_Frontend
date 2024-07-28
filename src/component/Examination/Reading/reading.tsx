@@ -54,6 +54,26 @@ function ReadingTab() {
   }
 
   const handdleSubmit = () => {
+    if(testName === undefined) {
+      alert('Please enter the test name')
+      return;
+    } 
+    if(duration === undefined){
+      alert('Please enter the duration')
+      return;
+    }
+    if(passageContent1 === ''){
+      alert('Please enter the passage content 1')
+      return;
+    }
+    if(passageContent2 === ''){
+      alert('Please enter the passage content 2')
+      return;
+    }
+    if(passageContent3 === ''){
+      alert('Please enter the passage content 3')
+      return;
+    }
     const reading_test = {
       name: testName,
       type: 'Reading',
@@ -80,7 +100,7 @@ function ReadingTab() {
           passageQues1.map((ques) => {
             let ques_type = ques.type
             switch (ques_type) {
-              case 'Questionair':
+              case 'questionair':
                 rt.addQuestionair(ques.content)
                 break;
               case 'filling':
@@ -99,7 +119,7 @@ function ReadingTab() {
               passageQues2.map((ques) => {
                 let ques_type = ques.type
                 switch (ques_type) {
-                  case 'Questionair':
+                  case 'questionair':
                     rt.addQuestionair(ques.content)
                     break;
                   case 'filling':
@@ -119,7 +139,7 @@ function ReadingTab() {
                   passageQues3.map((ques) => {
                     let ques_type = ques.type
                     switch (ques_type) {
-                      case 'Questionair':
+                      case 'questionair':
                         rt.addQuestionair(ques.content)
                         break;
                       case 'filling':

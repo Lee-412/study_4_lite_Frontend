@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react'
 
 const Multiplechoice = ({questions ,setQuestions}:any) => {
     const [question, setQuestion] = useState<string>()
-    const [isAdd, setAdd] = useState<boolean>(false)
     const [buttonState, setButtonState] = useState<boolean>(false)
     const [subOpComponent, setSubOpComponent] = useState<React.JSX.Element[]>()
     const [answer, setAnswer] = useState<string>()
@@ -96,6 +95,14 @@ const Multiplechoice = ({questions ,setQuestions}:any) => {
             marginTop: 2
         }}
         onClick={()=>{
+            if(question === '' || question === undefined){
+                alert('Please enter a question')
+                return;
+            }
+            if(answer === '' || answer === undefined){
+                alert('Please enter an answer')
+                return;
+            }
             setButtonState(true)
         }}>Finish Add Question</Button>
     </div>

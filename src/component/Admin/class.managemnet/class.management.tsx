@@ -66,7 +66,7 @@ const ClassManagement = () => {
                 const userData = await res.json();
 
                 return {
-                    name: userData.data.attributes.users_permissions_user.data.attributes.fullname,
+                    name: userData.data.attributes.users_permissions_user.data ?userData.data.attributes.users_permissions_user.data.attributes.fullname : undefined,
                     answer_task1: userData.data.attributes.task1Answer,
                     answer_task2: userData.data.attributes.task2Answer
                 };
