@@ -28,9 +28,6 @@ const WritingTabEdit = (props: dataWritingProps) => {
     const [currentTaskType, setCurrentTaskType] = useState<string | null>(null);
     const [uploadedImage1, setUploadedImage1] = useState<string | null>(null);
     const [uploadedImage2, setUploadedImage2] = useState<string | null>(null);
-    console.log(dataEdit);
-    console.log(formData);
-
     useEffect(() => {
         if (dataEdit) {
             setFormData({
@@ -48,8 +45,6 @@ const WritingTabEdit = (props: dataWritingProps) => {
             setCurrentTaskType(dataEdit.currentTaskType || null);
         }
     }, [dataEdit, setFormData]);
-    console.log(formData);
-
     const handleSaveTask = async () => {
         try {
             // Update existing data

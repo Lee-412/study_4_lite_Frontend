@@ -11,7 +11,6 @@ function PassageComponent({content, setContent, questions, setQuestions}:any) {
   const [subComponent, setSubComponent] = useState<React.JSX.Element[]>()
 
   useEffect(()=>{
-    console.log(questions);
   }, [questions])
   const addQuestionair = ()=>{
     const questionairComponent = (
@@ -44,9 +43,7 @@ function PassageComponent({content, setContent, questions, setQuestions}:any) {
     } else {
       setSubComponent([fillingComponent])
     }
-  }
-  console.log(questions);
-  
+  }  
   return (
     <div className='passage-container'>
         <MultilineTextFields content={content} setContent={setContent} minRows={10}/>

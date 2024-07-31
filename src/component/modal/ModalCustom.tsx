@@ -39,7 +39,6 @@ const btn_style_cf = {
 export default function ModalCustom(props:any) {
   const {setSubmit} = props
   const Router = useRouter()
-  console.log(props.path);
   const handleReady = () => {
     if(props.setSubmit !== undefined) {
         setSubmit(true)
