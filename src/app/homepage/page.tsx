@@ -60,11 +60,12 @@ export default function HomePage1() {
         <Box sx={{
             backgroundColor: "#DCE2EA"
         }}>
-            <HeaderApp />
+
             <Container sx={{
             }}>
+                <HeaderApp />
                 <TitleBox />
-                <SinginPage/>
+                <SinginPage />
                 <ImageSlider sliderData={slider} />
             </Container>
             <FooterApp />

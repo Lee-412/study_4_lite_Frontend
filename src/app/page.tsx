@@ -60,8 +60,10 @@ const HomePage = () => {
 
     return (
         <div style={{ backgroundColor: "#DCE2EA" }}>
-            <HeaderApp />
-            <Container>
+            <Container sx={{
+                backgroundColor: "#DCE2EA",
+            }}>
+                <HeaderApp />
                 <TitleBox />
                 <SinginPage />
                 <ImageSlider sliderData={slider} />

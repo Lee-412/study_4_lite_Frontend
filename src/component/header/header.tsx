@@ -5,22 +5,81 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Link from 'next/link'
-import { redirect, useRouter } from 'next/navigation';
+import { redirect, usePathname, useRouter } from 'next/navigation';
 import { useSession, signIn, signOut } from "next-auth/react"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import UserManual from '../modal/user.manual.modal';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Tooltip from '@mui/material/Tooltip';
 
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 export default function AppHeader() {
 
-    const { data: session } = useSession();
+    const [open, setOpen] = useState(false);
+    const route = useRouter();
+    const toggleDrawer = (newOpen: boolean) => () => {
+        setOpen(newOpen);
+    };
+    const [userData, setUserData] = useState({
+        token: '',
+        userID: 0,
+        username: '',
+        email: '',
+        authen: ''
+    })
+
+    console.log(userData);
+
+    useEffect(() => {
+
+        const userDataString = sessionStorage.getItem('userData');
+        console.log(userDataString);
+
+        if (!userDataString) {
+            // route.push('/');
+            console.log("no data");
+            route.push('/')
+        }
+        else {
+            const dataServer = JSON.parse(userDataString);
+            console.log(dataServer);
+
+            setUserData({
+                token: dataServer.token,
+                userID: dataServer.user.id,
+                email: dataServer.user.email,
+                username: dataServer.user.username,
+                authen: 'user'
+            })
+
+        }
+    }, []);
+    console.log(userData);
+
+    const handleLogout = () => {
+        if (window.confirm('Bạn có muốn đăng xuất không?')) {
+            sessionStorage.clear();
+            route.push('/');
+            setUserData({
+                token: '',
+                userID: 0,
+                username: '',
+                email: '',
+                authen: ''
+            })
+        };
+
+    }
+
+    const pathname = usePathname()
+    console.log(pathname);
+
     const [language, setLanguage] = useState("Vietnamese");
 
     const router = useRouter();
@@ -28,137 +87,25 @@ export default function AppHeader() {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         useState<null | HTMLElement>(null);
 
-    const [checkSignout, setCheckSignout] = useState(false);
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
     const [openManual, setOpenManual] = useState(false);
 
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
+        "no thing to say"
     };
-
-    const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-        handleMobileMenuClose();
-    };
-
-    const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setMobileMoreAnchorEl(event.currentTarget);
-    };
-
-    const menuId = 'primary-search-account-menu';
-
-    const renderMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            id={menuId}
-            keepMounted
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-            }}
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center',
-            }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem>
-                <Link
-                    href={`/`}
-                    style={{
-                        color: 'unset',
-                        textDecoration: 'unset',
-                    }}
-                >
-                    Thông tin tài khoản
-                </Link>
-            </MenuItem>
-            <MenuItem>
-                <Link
-                    href={`/`}
-                    style={{
-                        color: 'unset',
-                        textDecoration: 'unset',
-                    }}
-                >
-                    Đổi mật khẩu
-                </Link>
-            </MenuItem>
-            <MenuItem onClick={
-                () => {
-                    handleMenuClose();
-                    setCheckSignout(true);
-                    signOut();
-                }
-
-            }>Sign Out</MenuItem>
-
-        </Menu >
-    );
-
-    const mobileMenuId = 'primary-search-account-menu-mobile';
-
-    const renderMobileMenu = (
-        <>
-
-            <Menu
-                anchorEl={mobileMoreAnchorEl}
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-                id={mobileMenuId}
-                keepMounted
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-                open={isMobileMenuOpen}
-                onClose={handleMobileMenuClose}
-
-            >
-                <MenuItem>
-                    <Link href={"/playlist"}>
-                        Lớp học
-                    </Link>
-                </MenuItem>
-                <MenuItem>
-                    <Link href={"/examination"}>
-                        Bài thi
-                    </Link>
-
-                </MenuItem>
-
-                <MenuItem>
-                    <Avatar
-                        onClick={handleProfileMenuOpen}
-                    >LD</Avatar>
-                </MenuItem>
-            </Menu>
-
-
-        </>
-    );
-
-
-    const handleRedirectHome = () => {
-        router.push('/');
-    }
 
     return (
 
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{
+            flexGrow: 1,
+        }}>
             <AppBar position="static"
                 sx={{
-                    backgroundColor: "#FFFFFF",
+                    backgroundColor: 'white',
+                    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+                    borderRadius: '3vw',
+                    marginBottom: "3vh"
+
                 }}
             >
                 <Container sx={{
@@ -174,7 +121,7 @@ export default function AppHeader() {
                                 display: { xs: 'none', sm: 'block' },
                                 cursor: 'pointer'
                             }}
-                            onClick={() => handleRedirectHome()}
+                        // onClick={() => handleRedirectHome()}
                         >
                             Study
                         </Typography>
@@ -191,21 +138,7 @@ export default function AppHeader() {
                             }
                         }}>
                             {
-                                session ?
-                                    <>
-                                        <Link href={"/playlist"}>
-                                            Lớp học
-                                        </Link>
-                                        <Link href={"/examination"}>
-                                            Bài thi
-                                        </Link>
-
-                                        <Avatar
-                                            onClick={handleProfileMenuOpen}
-                                        >{session.user?.name?.charAt(0)}</Avatar>
-                                    </>
-                                    :
-
+                                userData.userID === 0 ?
                                     <>
 
                                         <Button>
@@ -218,6 +151,31 @@ export default function AppHeader() {
                                         </Button>
 
                                     </>
+                                    :
+                                    <>
+                                        <Link href={"/course"}>
+                                            Listening
+                                        </Link>
+                                        <Link href={"/course"}>
+                                            Writing
+                                        </Link>
+                                        <Link href={"/course"}>
+                                            Reading
+                                        </Link>
+                                        <Tooltip title="Alerts • No alerts">
+                                            <IconButton color="inherit">
+                                                <NotificationsIcon />
+                                            </IconButton>
+                                        </Tooltip>
+
+                                        {/* <IconButton color="secondary" sx={{ p: 0.5 }} onClick={handleLogout}>
+                                            <LogoutIcon />
+                                        </IconButton> */}
+                                        <Avatar
+                                            onClick={handleLogout}
+                                        >{userData.username.charAt(0)}</Avatar>
+                                    </>
+
                             }
 
                         </Box>
@@ -225,9 +183,7 @@ export default function AppHeader() {
                             <IconButton
                                 size="large"
                                 aria-label="show more"
-                                aria-controls={mobileMenuId}
                                 aria-haspopup="true"
-                                onClick={handleMobileMenuOpen}
                                 color="inherit"
                             >
                                 <MoreIcon />
@@ -236,8 +192,6 @@ export default function AppHeader() {
                     </Toolbar>
                 </Container>
             </AppBar>
-            {renderMobileMenu}
-            {renderMenu}
             <UserManual openManual={openManual}
                 setOpenManual={setOpenManual} />
         </Box >
