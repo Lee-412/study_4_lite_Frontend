@@ -7,7 +7,6 @@ const Test_api_url = `${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/tests`
 const fetcher = (...args: any[]) => fetch(...args).then(res => res.json())
 const TestPage = () => {
     const { data, error, isLoading } = useSWR(Test_api_url, fetcher)
-    console.log(data);
 
     const sessionData = window.sessionStorage
 

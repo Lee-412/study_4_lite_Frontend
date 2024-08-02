@@ -257,9 +257,6 @@ const WritingTab = () => {
         setTasks(sortedTasks);
     };
 
-
-    console.log(formData);
-
     return (
         <Box>
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

@@ -106,9 +106,6 @@ function WritingLayout({writing, test, writingID, userid}:any) {
         setDisPlay1(false)
         setDisPlay2(true)
     }
-
-
-    console.log(userid);
     
 
   return (

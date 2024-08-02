@@ -39,9 +39,6 @@ function TestContainer({ tests, userid}: any) {
     }, []);
 
 
-    console.log(userData);
-
-
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredTests, setFilteredTests] = useState(tests);
 

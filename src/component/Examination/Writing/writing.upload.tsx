@@ -37,8 +37,6 @@ const WritingTabUpload = (props: any) => {
     const handleSubmit = async () => {
         try {
 
-            console.log(formData);
-
             // Kiểm tra các thông tin bắt buộc của formData
             if (!formData.task1) {
                 alert("Vui lòng nhập nội dung Task 1.");
@@ -71,8 +69,9 @@ const WritingTabUpload = (props: any) => {
                 const wrtingsData = await wrtingsResponse.json();
                 const latestWrtingId = wrtingsData.data[0].id;
                 // Upload and update images
-                await uploadAndUpdate(latestWrtingId, formData.img1, formData.img2);
-
+                const res = await uploadAndUpdate(latestWrtingId, formData.img1, formData.img2);
+                console.log(res);
+                
                 // Update relation to wrting
                 const checkUpdate = await updateRelationtoWriting(latestTestId, latestWrtingId);
 

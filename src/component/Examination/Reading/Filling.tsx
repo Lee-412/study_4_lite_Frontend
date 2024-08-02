@@ -14,6 +14,10 @@ const Filling = ({questions, setQuestions}:any) => {
       <Button 
             disabled={isFinish}
             onClick={()=>{
+              if((ans === '' || ans === undefined) || (ques === '' || ques === undefined)){
+                alert('Please fill in all fields')
+                return;
+              }
                 setFinish(true)
                 const filling = {
                   type: 'filling',

@@ -71,15 +71,13 @@ export const submitDataTests = async (formData: FormDataType) => {
 
 export async function uploadAndUpdate(objectId: string, file1: File, file2: File): Promise<void> {
     try {
-        console.log(file1.type);
-        console.log(file2.type);
         let uploadedImage1;
         let uploadedImage2;
-        if (file1.type) {
+        if (file1 !== null) {
             uploadedImage1 = await uploadImage(file1);
 
         }
-        if (file2.type) {
+        if (file2 !== null) {
             uploadedImage2 = await uploadImage(file2);
         }
 
@@ -88,11 +86,11 @@ export async function uploadAndUpdate(objectId: string, file1: File, file2: File
             updatedObject = await updateObjectWithMultipleImage(objectId, uploadedImage1, uploadedImage2)
         }
         else {
-            if (uploadedImage1) {
+            if (uploadedImage1 !== undefined && uploadedImage1 !== null) {
                 updatedObject = await updateObjectWithImage(objectId, uploadedImage1, 'img1')
             }
 
-            if (uploadedImage2) {
+            if (uploadedImage2 !== undefined && uploadedImage2 !== null) {
                 updatedObject = await updateObjectWithImage(objectId, uploadedImage2, 'img2')
             }
         }
@@ -170,7 +168,6 @@ export async function updateObjectWithImage(objectId: string, uploadedImage: any
                 body: JSON.stringify({
                     data: {
                         img1: uploadedImage,
-
                     },
                 }),
             });
@@ -180,6 +177,9 @@ export async function updateObjectWithImage(objectId: string, uploadedImage: any
             }
 
             const updatedObject = await response.json();
+            console.log(updatedObject);
+            console.log(response.status);
+            
             return updatedObject;
         }
         else {
