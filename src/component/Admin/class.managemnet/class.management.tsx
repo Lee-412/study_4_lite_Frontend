@@ -80,7 +80,7 @@ const ClassManagement = () => {
                 type: 'writing'
             };
 
-            // console.log(data_show_writing);
+                 console.log(data_show_writing.data);
 
             const url = `/dashboard/show-more?data=${encodeURIComponent(JSON.stringify(data_show_writing))}`;
             window.open(url, "_blank", "width=800,height=600");
@@ -109,8 +109,6 @@ const ClassManagement = () => {
                 data: updatedData,
                 type: 'not_writing'
             };
-
-            // console.log(data_show);
 
             const url = `/dashboard/show-more?data=${encodeURIComponent(JSON.stringify(data_show))}`;
             window.open(url, "_blank", "width=600,height=400");

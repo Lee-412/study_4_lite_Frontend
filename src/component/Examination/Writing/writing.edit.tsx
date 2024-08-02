@@ -48,8 +48,6 @@ const WritingTabEdit = (props: dataWritingProps) => {
     const handleSaveTask = async () => {
         try {
             // Update existing data
-            console.log(formData);
-
             // check data validation FE => Update check validation BE sau
             if (!formData.task1 && !formData.task2) {
                 alert("Vui lòng tạo ít nhất 1 task.");
@@ -73,9 +71,6 @@ const WritingTabEdit = (props: dataWritingProps) => {
                 await updateRelationtoWriting(testId, wrtingId);
                 // Update images
                 if (formData.img1 && formData.img2) {
-                    console.log(formData.img1);
-                    console.log(formData.img2);
-                    console.log(formData.img1 as unknown as File);
                     await uploadAndUpdate(wrtingId as unknown as string, formData.img1 as unknown as File, formData.img2 as unknown as File);
                 }
             }

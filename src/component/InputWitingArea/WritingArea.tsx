@@ -10,7 +10,6 @@ function WritingArea({setWriting, setWordCount}:any) {
         {
           setWordCnt(counting_words(e.target.value))
           setWordCount(counting_words(e.target.value))
-          console.log(e.target.value);
           setWriting(e.target.value)
           
         }} rows={20} cols={64} name="usrtxt" wrap="hard" className="writing-field" placeholder='Viết essay tại đây...'>
