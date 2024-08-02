@@ -20,6 +20,8 @@ import {
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import './test.css'
+import { Document, HeadingLevel, Packer, Paragraph, TextRun } from 'docx';
+
 
 const ShowMore = () => {
     const searchParams = useSearchParams();
@@ -50,30 +52,92 @@ const ShowMore = () => {
     console.log(testData);
 
 
-
-    const handleDownloadFile = (item: any) => {
+    const handleDownloadFile = async (item: any) => {
         const title = testData.title;
 
-        const content = `
-Title: ${title}
 
-Name: ${item.name}
+        const createParagraphs = (text: string) => {
+            return text.split('\n').map((line, index) => new Paragraph({
+                children: [
+                    new TextRun(`     ${line}`),
+                ],
+            }));
+        };
 
-Task 1 Answer: ${item.answer_task1}
 
-Task 2 Answer: ${item.answer_task2}
-`;
+        // Create a new Document
+        const doc = new Document({
+            sections: [
+                {
+                    properties: {},
+                    children: [
+                        new Paragraph({
 
-        const blob = new Blob([content], { type: 'text/plain' });
+                            heading: HeadingLevel.HEADING_1,
+                            children: [
+                                new TextRun({
+                                    text: `Title: ${title}`,
+                                    bold: true,
+                                }),
+                            ],
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun(`  `),
+                            ],
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: `Name: ${item.name}`,
+                                    bold: true,
+                                }),
+                            ],
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun(`  `),
+                            ],
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: `Task 1: ${item.task1}`,
+                                    bold: true,
+                                }),
+                            ],
+                        }),
+                        ...createParagraphs(` ${item.answer_task1}`),
+                        new Paragraph({
+                            children: [
+                                new TextRun(`  `),
+                            ],
+                        }),
 
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: `Task 2: ${item.task2}`,
+                                    bold: true,
+                                }),
+                            ],
+                        }),
+                        ...createParagraphs(` ${item.answer_task2}`),
+                    ],
+                },
+            ],
+        });
+
+        // Pack the document and create a Blob
+        const blob = await Packer.toBlob(doc);
+
+        // Create a link and trigger a download
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = `${item.name}.txt`;
+        link.download = `${item.name}.docx`;
 
         document.body.appendChild(link);
-
         link.click();
-
         document.body.removeChild(link);
     };
 

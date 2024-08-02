@@ -65,9 +65,16 @@ const ClassManagement = () => {
                 const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/answer-wrtings/${userId}?populate=*`);
                 const userData = await res.json();
 
+                console.log(userData);
+                console.log(userData.data.attributes.wrting.data.attributes.task1);
+                console.log(userData.data.attributes.wrting.data.attributes.task2);
+
+
                 return {
-                    name: userData.data.attributes.users_permissions_user.data ?userData.data.attributes.users_permissions_user.data.attributes.fullname : undefined,
+                    name: userData.data.attributes.users_permissions_user.data ? userData.data.attributes.users_permissions_user.data.attributes.fullname : undefined,
+                    task1: userData.data.attributes.wrting.data.attributes.task1,
                     answer_task1: userData.data.attributes.task1Answer,
+                    task2: userData.data.attributes.wrting.data.attributes.task2,
                     answer_task2: userData.data.attributes.task2Answer
                 };
             }));
