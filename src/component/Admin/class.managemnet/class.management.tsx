@@ -189,8 +189,6 @@ const ClassManagement = () => {
                     </Table>
                 </TableContainer>
             </Box>
-
-
         </Paper>
     );
 };

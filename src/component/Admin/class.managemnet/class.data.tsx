@@ -8,9 +8,7 @@ interface TestProps {
     handleDeleteTest: (id: any) => void;
     handleLearnMore: (test: any) => void;
 }
-const TestRow = ({ test,
-    handleLearnMore,
-    handleDeleteTest }: any) => {
+const TestRow = ({ test, handleLearnMore, handleDeleteTest }: any) => {
     console.log(test);
 
     return (
