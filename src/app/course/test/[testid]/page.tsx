@@ -34,10 +34,11 @@ async function page({params}:any) {
     const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL }/tests/${test_id}?populate=*`)
     const dt= await response.json()
     const reading_id = dt.data.attributes.reading_test.data.id;
+    const duration = dt.data.attributes.Duration
 
     const data = await fetchAllData(reading_id);
     return (
-      <ReadingTest data={data} testID={params.testid} userId={user_id} />
+      <ReadingTest data={data} testID={params.testid} userId={user_id} duration={duration}/>
     );
   } else if (params.testid.includes('Listening')) {
     const params_extraction = params.testid.split('-')
@@ -47,8 +48,9 @@ async function page({params}:any) {
     const dt= await response.json()
     const listening_id = dt.data.attributes.listening_test.data.id;
     const data = await fetchListeningData(listening_id)
+    const duration = dt.data.attributes.Duration
     return (
-      <ListeningTest data={data} testID={params.testid} userId={user_id}/>
+      <ListeningTest data={data} testID={params.testid} userId={user_id} duration={duration}/>
     )
   }
   return (
